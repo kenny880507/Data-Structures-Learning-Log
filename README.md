@@ -14,6 +14,75 @@ This project is used to document the learning journey of data structures. I will
 
 This section will introduce common containers in data structure. The content covers the definition of each container and the four fundamental operations: access, search, insert, and delete.
 
+### Introduction to Data Structure
+
+#### Array
+
+- Definition: A structure in which elements are arranged contiguously in memory.
+- Access: Due to its contiguous layout, it supports random access. The time complexity for access is `O(1)`.
+- Search: For an unsorted array, searching requires traversal. The time complexity is `O(n)`.
+- Insert: To insert an element, all data after the insertion point must be shifted one position to the right. The time complexity is `O(n)`. For a sorted array, binary search can be used to reduce the time complexity to `O(log n)`.
+- Delete: To delete an element, all data after the deleted item must be shifted one position to the left. The time complexity is `O(n)`.
+
+#### Linked List
+
+- Definition: A linked list consists of a sequence of elements called nodes. Each node contains its own data and a pointer to the next node. Depending on whether nodes also include a pointer to the previous node, the list is classified as either singly linked or doubly linked.
+>For convenience, define two nodes as `previous` and `current`. `previous` is the node just before the operation position, while `current` is the node to be inserted into or deleted from the linked list. The pointer to the next node is defined as `next`.
+- Access: Linked lists do not support random access. To locate a node at a specific position, traversal must begin from the head and proceed sequentially through the list, resulting in a time complexity of `O(n)`.
+- Search: Similar to access, search requires starting from the head and comparing each node's data one by one until the target is found or the traversal ends. The time complexity is `O(n)`.
+- Insert: **Once the insertion position is known**, the operation can be completed by updating just a few pointers. Set `current` to point to `previous->next`, then set `previous->next` to point to `current`.
+- Delete: Similar to insertion, **if the position of the node to be deleted is known**, the operation can be completed by adjusting the pointers of its surrounding nodes. First, use a variable `temp` to store the address of `current`. Then set `previous->next` to `current->next`, and finally free the `temp` (i.e., the current node).
+>Without `temp`, it's not possible to free the memory of `current`.
+
+
+#### Tree
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
+#### Heap
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
+#### Queue
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
+#### Stack
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
+#### Graph
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
+#### Hash Table
+
+- Definition:
+- Access:
+- Search:
+- Insert:
+- Delete:
+
 ### Cheat Sheet
 
 reference: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
@@ -36,21 +105,112 @@ This section records the C++ syntax used in my code and demonstrates how to impl
 
 The execution strategy is below:
 
-1. The container holds only objects and iterators, without defining any member functions.
-2. The four fundamental operations of data structures—access, search, insert, and delete—are implemented using template functions.
-3. These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.
+1. A container is responsible for managing its internal data and iterators. It provides member functions such as  and  to access those iterators.
+2. The container does not directly implement fundamental data structure operations.
+3. The four fundamental operations of data structures—access, search, insert, and delete—are implemented using global template functions.
+4. These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.
 
 ### Syntax
 
 #### Class
 
+A C++ class acts as a blueprint for an object, defining its attributes (data) and behaviors (functions). It encapsulates both data and the functions that operate on that data into a single, cohesive unit.
+
+```C++
+class MyClass {
+private:
+    // Attributes (data members)
+    int my_number;
+
+public:
+    // Constructor
+    MyClass(int num) : my_number(num) {}
+
+    // Method (member function)
+    int getNumber() {
+        return my_number;
+    }
+};
+```
+
 #### function
+
+A function is a block of code designed to perform a specific task. It can optionally define input parameters to allow the caller to pass arguments and can also return a value as output. In C++, functions can exist independently or as member functions of a class.
+
+```C++
+// Function outside of a class
+int add(int a, int b) {
+    return a + b;
+}
+
+// Function inside a class (member function)
+class Calculator {
+public:
+    int add(int a, int b) {
+        return a + b;
+    }
+};
+```
 
 #### Overload
 
+Function overloading allows multiple functions in the same scope to share the same name, as long as they have a different number or type of parameters. The compiler automatically selects the correct function to execute based on the arguments you provide.
+
+```C++
+// Overload with different parameter types
+void print(int value) {
+    // prints an integer
+}
+
+void print(double value) {
+    // prints a double
+}
+
+// Overload with different number of parameters
+void print(int a, int b) {
+    // prints two integers
+}
+```
+
 #### Template
 
+A template is a tool for generic programming that allows functions or classes to work with multiple data types without needing to rewrite the code for each type. This promotes code reusability. A template declaration starts with the keyword `template`, followed by parameters enclosed in angle brackets `< >`.
+
+```C++
+// Template function for adding any two numbers
+template<typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+// Template class for a generic container
+template<typename T>
+class MyContainer {
+private:
+    T data;
+public:
+    MyContainer(T value) : data(value) {}
+};
+```
+
 #### Iterator
+
+An iterator is a pointer-like object used to traverse elements within a container, such as an array or a linked list. Different types of iterators support different operations, such as moving forward, backward, or performing random access. Iterators generalize the concept of a pointer, allowing for uniform interaction with various data structures.
+
+```C++
+#include <vector>
+
+std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+// Get an iterator to the beginning of the vector
+std::vector<int>::iterator it = numbers.begin();
+
+// Move the iterator forward
+it++;
+
+// Access the element the iterator points to
+int value = *it;
+```
 
 #### Tag Type
 
