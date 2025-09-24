@@ -5,10 +5,90 @@ This project is used to document the learning journey of data structures. I will
 
 ## Outline
 
-- Git
-- C++
 - Data Structure
+- C++
+- Git
 - Helpful Links
+
+## Data Structure
+
+This section will introduce common containers in data structure. The content covers the definition of each container and the four fundamental operations: access, search, insert, and delete.
+
+### Cheat Sheet
+
+reference: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
+
+#### Big-O Complexity Chart
+
+![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)
+
+#### Common Data Structure Operations
+
+![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)
+
+#### Array Sorting Algorithms
+
+![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)
+
+## C++
+
+This section records the C++ syntax used in my code and demonstrates how to implement different data structures using C++.
+
+The execution strategy is below:
+
+1. The container holds only objects and iterators, without defining any member functions.
+2. The four fundamental operations of data structures—access, search, insert, and delete—are implemented using template functions.
+3. These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.
+
+### Syntax
+
+#### Class
+
+#### function
+
+#### Overload
+
+#### Template
+
+#### Iterator
+
+#### Tag Type
+
+Tag type is basically a empty struct. Tag types are used as a mechanism to distinguish between overloaded functions. For example, two tag type is defined:
+
+```C++
+struct type1_tag{};
+struct type2_tag{};
+```
+
+The tag type is passed as a parameter to the overloaded function, enabling different behaviors depending on the tag:
+
+```C++
+template<typename Iterator>
+typename Iterator::value_type do_something(Iterator it, type1_tag){
+    ...
+}
+template<typename Iterator>
+typename Iterator::value_type do_something(Iterator it, type2_tag){
+    ...
+}
+```
+The reason for using this syntax is that different iterators support different operations—not all iterators can move forward, backward, or perform random access.
+
+### Implement of Data Structure
+
+### Data Structure vs. C++ STL Container
+
+| Data Structure | C++ STL Container | Notes |
+| :--- | :--- | :--- |
+| **Array** | `std::array`, `std::vector` | `std::array` has a fixed size at compile time, while `std::vector` can be resized dynamically. |
+| **Linked List** | `std::list`, `std::forward_list` | `std::list` is a doubly linked list, `std::forward_list` is a singly linked list. |
+| **Tree** | `std::set`, `std::map`, `std::multiset`, `std::multimap` | These are typically implemented using **balanced binary search trees** (e.g., Red-Black Trees) to keep data sorted. |
+| **Heap** | `std::priority_queue` | The underlying data structure is a heap (by default, a max-heap), providing efficient access to the largest element. |
+| **Queue** | `std::queue` | A First-In, First-Out (FIFO) container. |
+| **Stack** | `std::stack` | A Last-In, First-Out (LIFO) container. |
+| **Graph** | **No direct equivalent** | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
+| **Hash Table** | `std::unordered_set`, `std::unordered_map` | Provides average O(1) time complexity for lookups, but the data is not sorted. |
 
 ## Git
 
@@ -138,7 +218,7 @@ git push -u origin main
 `git fetch`: download changes from the remote repository.
 
 `git rebase`: moves your local commits to the top of the remote commits. This keeps your commit history clean and linear, without unnecessary merge commits.
->Never use `rebase` on public branches! If you perform a `rebase` on a public branch that others are working on —such as main— you’ll rewrite the commit history of that branch. This can cause other developers’ local histories to diverge from the remote history, leading to major confusion and conflicts.
+>Never use `rebase` on public branches! If you perform a `rebase` on a public branch that others are working on—such as main—you’ll rewrite the commit history of that branch. This can cause other developers’ local histories to diverge from the remote history, leading to major confusion and conflicts.
 
 `git pull --rebase`: equivalent to `git fetch` + `git rebase`.
 
@@ -149,26 +229,6 @@ git push -u origin main
 `git push -u origin <new-branch>`: `-u` is used for pushing new branch. Git will set up tracking information for this branch on the remote.
 >- Git uses origin as a default alias pointing to the remote repo.
 >- If the branch already exists on the remote, a simple `git push` is enough.
-
-## C++
-
-## Data Structure
-
-### Cheat Sheet
-
-reference:[Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
-
-#### Big-O Complexity Chart
-
-![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)
-
-#### Common Data Structure Operations
-
-![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)
-
-#### Array Sorting Algorithms
-
-![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)
 
 ## Helpful Links
 
