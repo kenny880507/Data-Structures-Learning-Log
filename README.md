@@ -105,19 +105,19 @@ This section will introduce common containers in data structure. The content cov
 
 ### Cheat Sheet
 
-reference: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
+reference: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)[^1]
 
 #### Big-O Complexity Chart
 
-![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)
+![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)[^1]
 
 #### Common Data Structure Operations
 
-![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)
+![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)[^1]
 
 #### Array Sorting Algorithms
 
-![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)
+![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)[^1]
 
 ## C++
 
@@ -411,7 +411,5 @@ git push -u origin main
 >- If the branch already exists on the remote, a simple `git push` is enough.
 
 ## Reference
-
-footprint test [^1]
 
 [^1]: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
