@@ -105,19 +105,17 @@ This section will introduce common containers in data structure. The content cov
 
 ### Cheat Sheet
 
-reference: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)[^1]
+#### Big-O Complexity Chart[^1]
 
-#### Big-O Complexity Chart
+![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)
 
-![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)[^1]
-
-#### Common Data Structure Operations
+#### Common Data Structure Operations[^1]
 
 ![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)[^1]
 
-#### Array Sorting Algorithms
+#### Array Sorting Algorithms[^1]
 
-![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)[^1]
+![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)
 
 ## C++
 
