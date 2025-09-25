@@ -5,10 +5,10 @@ This project is used to document the learning journey of data structures. I will
 
 ## Outline
 
-- Data Structure
-- C++
-- Git
-- Helpful Links
+- [Data Structure](#data-structure)
+- [C++](#c++)
+- [Git](#git)
+- [Reference](#reference)
 
 ## Data Structure
 
@@ -26,14 +26,58 @@ This section will introduce common containers in data structure. The content cov
 
 #### Linked List
 
-- Definition: A linked list consists of a sequence of elements called nodes. Each node contains its own data and a pointer to the next node. Depending on whether nodes also include a pointer to the previous node, the list is classified as either singly linked or doubly linked.
->For convenience, define two nodes as `previous` and `current`. `previous` is the node just before the operation position, while `current` is the node to be inserted into or deleted from the linked list. The pointer to the next node is defined as `next`.
-- Access: Linked lists do not support random access. To locate a node at a specific position, traversal must begin from the head and proceed sequentially through the list, resulting in a time complexity of `O(n)`.
+- Definition: A linked list consists of a sequence of elements called `nodes`. Each `node` contains its own data and a pointer to the next `node`. Depending on whether `nodes` also include a pointer to the previous `node`, the list is classified as either singly linked or doubly linked.
+  >For convenience, define two `nodes` as `previous` and `current`. `previous` is the `node` just before the operation position, while `current` is the `node` to be inserted into or deleted from the linked list. The pointer to the next `node` is defined as `next`.
+- Access: Linked lists do not support random access. To locate a `node` at a specific position, traversal must begin from the head and proceed sequentially through the list, resulting in a time complexity of `O(n)`.
 - Search: Similar to access, search requires starting from the head and comparing each node's data one by one until the target is found or the traversal ends. The time complexity is `O(n)`.
-- Insert: **Once the insertion position is known**, the operation can be completed by updating just a few pointers. Set `current` to point to `previous->next`, then set `previous->next` to point to `current`.
-- Delete: Similar to insertion, **if the position of the node to be deleted is known**, the operation can be completed by adjusting the pointers of its surrounding nodes. First, use a variable `temp` to store the address of `current`. Then set `previous->next` to `current->next`, and finally free the `temp` (i.e., the current node).
->Without `temp`, it's not possible to free the memory of `current`.
+- Insert: **Once the insertion position is known**, the operation can be completed by updating just a few pointers. Set `current` to point to `previous->next`, then set `previous->next` to point to `current`. The time complexity is `O(1)`.
+- Delete: Similar to insertion, **if the position of the node to be deleted is known**, the operation can be completed by adjusting the pointers of its surrounding nodes. First, use a variable `temp` to store the address of `current`. Then set `previous->next` to `current->next`, and finally free the `temp` (i.e., the current node). The time complexity is `O(1)`.
+  >Without `temp`, it's not possible to free the memory of `current`.
 
+#### Queue
+
+- Definition: A queue is an abstract data structure (ADT) that can be implemented using either an `array` or a `linked list`. Its core principle is First-In-First-Out (FIFO), and it restricts random access—only allowing operations such as `enqueue`, `dequeue`, `front`, and `back`.
+  >- `front`: return the first item of the queue.
+  >- `back`: return the last item of the queue.
+  >- `enqueue`: place a new item after original `back`, this item becomes a new `back`.
+  >- `dequeue`: delete `front` from the queue, the next item becomes a new `front`.
+
+- Access: If you want to access `i-th` item in the queue, you need to `dequeue` `(i-1)` times and check `front`. The time complextiy is `O(n)`.
+- Search: The time complexity is `O(n)`, which is the same as `array` and `linked list`.
+- Insert and Delete:
+  - `Array`-based: In an `array`-based queue, either the `enqueue` or `dequeue` operation (depending on which end is designated as the head) may involve shifting elements, causing the time complexity to degrade to `O(n)`. By introducing the concept of a `circular array`, both `enqueue` and `dequeue` operations can be performed without shifting, maintaining a constant time complexity of `O(1)`.
+    > A `circular array` is a clever way to utilize `array` space efficiently. It connects the head and tail of the array to form a logical circle, effectively solving the problem of wasted space and performance issues that arise when handling FIFO (First-In-First-Out) data structures like `queues`, especially after removing elements from the front.
+  - `Linked list`-based: Similar to `linked list`, `enqueue` and `dequeue` operations performs a constant time complexity of `O(1)`.
+
+#### Stack
+
+- Definition: `Stack` is another ADT. It core principle is Last-In-First-Out (LIFO) only allowing actions such as `push`, `pop`, `top`.
+  >- `top`: return the last item of the stack.
+  >- `pop`: delete `top` from the stack, the previos item becomes a new `top`.
+  >- `push`: insert a new item into the stack, this item becomes a new `top`.
+- Access: If you want to access `i-th` item in the stack, it is essential to `pop` all items above and check `top`. The time complextiy is `O(n)`.
+- Search: Need to traversal the stack and the time complexity is `O(n)`.
+- Insert: A single `push` action performs a time complexity of `O(1)`.
+- Delete: A single `pop` action performs a time complexity of `O(1)`.
+
+#### Hash Table
+
+- Definition: At the lowest level, the implementation uses an `array`. Data is input as `key`-`value` pairs, where the `key` is typically a string or an integer. A hash function converts the `key` into a `hash value` (a non-negative integer), which is then mapped to an `index` in the underlying array.
+  >A good hash function should satisfy the following criteria:
+  >- Fast computation: The hash function should be computed as quickly as possible to avoid becoming a performance bottleneck.
+  >- Uniform distribution: For a large number of input keys, the hash values generated should be evenly distributed across the hash table’s array space to minimize collisions.
+  >- Low collision rate: The probability of different keys producing the same hash value should be as low as possible.
+
+- Access: A hash table does not support `value` retrieval by `index`.
+- Search: 
+  - Average case - Since each `value` has a corresponding `key`, converting the `key` into an `index` allows us to determine whether the `value` exists in the hash table. The time complexity is `O(1)`.
+  - Worst case - When severe hash collisions occur, many distinct `keys` are mapped to the same `index`. In such cases, we must rely on a collision resolution strategy to handle the situation. If all `keys` are mapped to a single location, searching for a specific key degrades into a linear scan through a long `linked list` or `array`, resulting in a time complexity of `O(n)`.
+- Insert:
+  - Average case - The time required to compute the hash function and assign the `value` to a specific position in the `array` is constant, so the time complexity is `O(1)`.
+  - Worst case - Severe hash collisions can cause insertion operations to take additional time to locate an available position. The time complexity degrade to `O(n)`.
+- Delete:
+  - Average case - The time required to compute the hash function and delete the `value` from a specific position in the `array` is constant, so the time complexity is `O(1)`.
+  - Worst case - Under severe collisions, it is necessary to linearly traverse all collided entries to locate and delete the target, causing the time complexity to degrade to `O(n)`.
 
 #### Tree
 
@@ -51,31 +95,7 @@ This section will introduce common containers in data structure. The content cov
 - Insert:
 - Delete:
 
-#### Queue
-
-- Definition:
-- Access:
-- Search:
-- Insert:
-- Delete:
-
-#### Stack
-
-- Definition:
-- Access:
-- Search:
-- Insert:
-- Delete:
-
 #### Graph
-
-- Definition:
-- Access:
-- Search:
-- Insert:
-- Delete:
-
-#### Hash Table
 
 - Definition:
 - Access:
@@ -390,6 +410,6 @@ git push -u origin main
 >- Git uses origin as a default alias pointing to the remote repo.
 >- If the branch already exists on the remote, a simple `git push` is enough.
 
-## Helpful Links
+## Reference
 
-[Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
+[^1]: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
