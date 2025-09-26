@@ -117,10 +117,15 @@ This section will introduce common containers in data structure. The content cov
 
 - **Types Of Binary Trees**
   - **Full Binary Tree**: A binary tree in which every `node` has either 0 or 2 `children`—no `node` has only one `child`.
+
     ![Full Binary Tree](documents/images/Data%20Structure/full_binary_tree.png)
+
   - **Perfect Binary Tree**: A full binary tree in which all internal `nodes` have exactly two children and all `leaves` are at the same depth.
+
     ![Perfect Binary Tree](documents/images/Data%20Structure/perfect_binary_tree.png)
+  
   - **Complete Binary Tree**: A binary tree in which all levels are fully filled except possibly the last, which is filled from left to right.
+
     ![Complete Binary Tree](documents/images/Data%20Structure/complete_binary_tree.png)
 
 - **Binary Search Tree**
