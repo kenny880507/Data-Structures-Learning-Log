@@ -177,7 +177,8 @@ The execution strategy is below:
 2. ~~The container does not directly implement fundamental data structure operations.~~
 3. ~~The four fundamental operations of data structures—access, search, insert, and delete—are implemented using global template functions.~~
 4. ~~These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.~~
-   >It was observed during execution that arrays and linked lists handle insertions and deletions differently, particularly regarding capacity management, making it unsuitable to use templates for a unified function.
+
+  >It was observed during execution that arrays and linked lists handle insertions and deletions differently, particularly regarding capacity management, making it unsuitable to use templates for a unified function.
 
 
 1. Containers not only store data, but also offer member functions like `begin()` and `end()` for iterator access, and `insert()` and `delete()` for adding or removing elements.
