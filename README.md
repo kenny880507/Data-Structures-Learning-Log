@@ -81,11 +81,13 @@ This section will introduce common containers in data structure. The content cov
 
 #### Tree
 
-- **Definition (General)**: A tree is a non-linear, hierarchical data structure composed of a finite set of nodes connected by edges. It has the following characteristics:
-  1. There is a special node called the root, which has no parent.
-  2. Except for the root, every node has exactly one parent.
-  3. Between any two nodes in the tree, there exists exactly one simple path—meaning the tree contains no cycles.
-- **Term**:
+![Tree](documents/images/Data%20Structure/tree.png)
+
+- **Definition (General)**: A tree is a non-linear, hierarchical data structure composed of a finite set of `nodes` connected by `edges`. It has the following characteristics:
+  1. There is a special `node` called the `root`, which has no `parent`.
+  2. Except for the root, every `node` has exactly one `parent`.
+  3. Between any two `nodes` in the tree, there exists exactly one simple path—meaning the tree contains no cycles.
+- **Term**
   - `root`: The top `node` of a tree, which is the only `node` without `parent`.
   - `parent`: A `node` directly above another `node`, connected to it via an `edge`.
   - `child`: A `node` directly below another `node`, connected to it via an `edge`.
@@ -96,19 +98,44 @@ This section will introduce common containers in data structure. The content cov
   - `degree of tree`: The maximum degree among all `nodes` in the tree.
   - `depth`: The length of the path (number of edges) from the `root` to a given `node`.
   - `height`: The length of the longest path from a `node` to its farthest `leaf`. The `height` of the tree is the `height` of its `root`.
-- **Traversal**:
-  1. Depth-First Search (DFS): This type of traversal explores the branches of a tree as deeply as possible before backtracking, continuing until all leaf nodes are reached. There are three main types:
+- **Traversal**
+   - Depth-First Search (DFS): This type of traversal explores the branches of a tree as deeply as possible before backtracking, continuing until all `leaves` are reached. There are three main types:
 
-  | Traversal Type | Order (N = Node, L = Left, R = Right) | Description |
-  | :--- | :--- | :--- |
-  | **Preorder** | N → L → R | Visit the node first, then traverse the left and right subtrees. |
-  | **Inorder** | L → N → R | Traverse the left subtree, visit the node, then traverse the right subtree. |
-  | **Postorder** | L → R → N | Traverse both subtrees first, then visit the node. |
+        | Traversal Type | Order (N = Node, L = Left, R = Right) | Description |
+        | :--- | :--- | :--- |
+        | **Preorder** | N → L → R | Visit the `node` first, then traverse the left and right subtrees. |
+        | **Inorder** | L → N → R | Traverse the left subtree, visit the `node`, then traverse the right subtree. |
+        | **Postorder** | L → R → N | Traverse both subtrees first, then visit the `node`. |
 
-  1. Breadth-First Search (BFS): Commonly referred to as Level Order Traversal, this method visits the nodes of a tree level by level, from left to right.
+   - Breadth-First Search (BFS): Commonly referred to as Level Order Traversal, this method visits the `nodes` of a tree level by level, from left to right.
 
-- **Insert**:
-- **Delete**:
+- **Binary Tree**
+  
+  ![Binary Tree](documents/images/Data%20Structure/binary_tree.png)
+
+  A binary tree is a tree data structure composed of `nodes`, each of which has at most, two `children`, referred to as left and right `nodes`.
+
+- **Types Of Binary Trees**
+  - **Full Binary Tree**: A binary tree in which every `node` has either 0 or 2 `children`—no `node` has only one `child`.
+    ![Full Binary Tree](documents/images/Data%20Structure/full_binary_tree.png)
+  - **Perfect Binary Tree**: A full binary tree in which all internal `nodes` have exactly two children and all `leaves` are at the same depth.
+    ![Perfect Binary Tree](documents/images/Data%20Structure/perfect_binary_tree.png)
+  - **Complete Binary Tree**: A binary tree in which all levels are fully filled except possibly the last, which is filled from left to right.
+    ![Complete Binary Tree](documents/images/Data%20Structure/complete_binary_tree.png)
+
+- **Binary Search Tree**
+    
+    ![Binary Search Tree](documents/images/Data%20Structure/BST.png)
+    
+  A binery search tree (BST) is also a binary tree. Some rules must be obeyed to call a binary tree binary search tree:
+  - The nodes contain a `key` and a `value`.
+  - The `key` must be comparable.
+  - The `key` of the left child must be less than that of its parent `node`.
+  - The `key` of the right child must be greater than that of its parent `node`.
+  - The left and the right subtree of a particular `node` will also, in turn, be binary search trees.
+
+- **Balance of BST**
+- **B-Tree**
 
 #### Heap
 
@@ -146,10 +173,15 @@ This section records the C++ syntax used in my code and demonstrates how to impl
 
 The execution strategy is below:
 
-1. A container is responsible for managing its internal data and iterators. It provides member functions such as  and  to access those iterators.
-2. The container does not directly implement fundamental data structure operations.
-3. The four fundamental operations of data structures—access, search, insert, and delete—are implemented using global template functions.
-4. These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.
+1. ~~A container is responsible for managing its internal data and iterators. It provides member functions such as `begin()` and `end()` to access those iterators.~~
+2. ~~The container does not directly implement fundamental data structure operations.~~
+3. ~~The four fundamental operations of data structures—access, search, insert, and delete—are implemented using global template functions.~~
+4. ~~These functions take iterators as parameters instead of the container itself, allowing operations to be performed through the iterator interface.~~
+   >It was observed during execution that arrays and linked lists handle insertions and deletions differently, particularly regarding capacity management, making it unsuitable to use templates for a unified function.
+
+
+1. Containers not only store data, but also offer member functions like `begin()` and `end()` for iterator access, and `insert()` and `delete()` for adding or removing elements.
+2. The `access()` and `search()` functions are implemented as external template functions that operate on iterators.
 
 ### Syntax
 
@@ -432,5 +464,8 @@ git push -u origin main
 >- If the branch already exists on the remote, a simple `git push` is enough.
 
 ## Reference
+
+1. <https://www.bigocheatsheet.com/>
+2. <https://zerotomastery.io/cheatsheets/data-structures-and-algorithms-cheat-sheet/>
 
 [^1]: [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)

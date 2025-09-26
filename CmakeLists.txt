@@ -1,0 +1,32 @@
+# version requirement of cmake
+cmake_minimum_required(VERSION 3.10)
+
+# project name and version
+project(
+    DS_demo         # project name
+    VERSION 1.0     # project version
+    LANGUAGES CXX   # C++ project declaration
+)
+
+# setting of C++ standard
+set(CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED True)
+
+# set .exe file output to root of project
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+# define .exe file
+add_executable(
+    DS_demo
+    src/main.cpp
+)
+
+# display the build type in cmake console
+if(CMAKE_BUILD_TYPE)
+    if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+        set(BUILD_TYPE "✅✅✅")
+    elseif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        set(BUILD_TYPE "🐞🐞🐞")
+    endif()
+    message(STATUS "Current Build Type: ${CMAKE_BUILD_TYPE}" ${BUILD_TYPE})
+endif()
