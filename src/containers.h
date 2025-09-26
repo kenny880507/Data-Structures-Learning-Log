@@ -21,9 +21,33 @@ class dynamic_array{
         public:
         using value_type = typename T;
         using iterator_type = typename random_access_iterator_tag;
+        T* getPtr() return ptr;
+        iterator& operator++(){
+            ++ptr;
+            return *this
+        }
+        iterator operator++(int){
+            iterator temp = *this;
+            ++ptr;
+            return temp;
+        }
+        private:
+        T* ptr;
     }
-    void expand(){}
-    void insert(const T& data, size_t position){}
+    void expand(){
+        if(capacity == size){
+            capacity *= 2;
+            T* temp = new T[capacity];
+            for(int i = 0; i<size;++i) temp[i] = data[i];
+            delete [] data;
+            data = temp;
+        } else {
+            return;
+        }
+    }
+    void insert(const T& data, size_t position){
+        
+    }
     void remove(const T& data, size_t position){}
     private:
     size_t capacity;
