@@ -4,6 +4,7 @@
 #define ALGORITHMS_H
 
 #include "containers.h"
+#include <iostream>
 
 // access function
 template <typename iterator>
@@ -19,7 +20,7 @@ typename iterator::value_type access_impl(iterator it, int index, random_access_
 
 template <typename iterator>
 typename iterator::value_type access(iterator it, int index){
-    return access_impl(it, index, iterator::type{});
+    return access_impl(it, index, typename iterator::iterator_type{});
 }
 
 // search function
@@ -28,7 +29,22 @@ typename iterator::value_type access(iterator it, int index){
 // is_sort function
 template <typename iterator>
 bool is_sort(iterator begin, iterator end){
-    
+    if(begin>end){
+        std::cout << "[ERROR] begin is lager than end.";
+        return false;
+    } else if(begin==end) {
+        std::cout << "[ERROR] begin equals to end.";
+        return false;
+    } else {
+        auto previous_value = *begin;
+        ++begin;
+        while(begin < end){
+            if(*begin < previous_value) return false;
+            previous_value = *begin;
+            ++begin;
+        }
+        return true;
+    }
 }
 
 
