@@ -7,9 +7,44 @@
 #include <iostream>
 
 // define iterator tag
+
 struct foward_iterator_tag{}; // foward iterator support ++ operation
 struct bidirectional_iterator_tag: foward_iterator_tag{}; // bidirectional iterator support ++, -- operation
 struct random_access_iterator_tag: bidirectional_iterator_tag{}; // bidirectional iterator support ++, --, [] operation
+
+// access function
+
+template <typename iterator>
+typename iterator::value_type access_impl(iterator it, int index, foward_iterator_tag){
+    while(index-- > 0) ++it;
+    return *it;
+}
+
+template <typename iterator>
+typename iterator::value_type access_impl(iterator it, int index, random_access_iterator_tag){;
+    return *(it + index);
+}
+
+template <typename iterator>
+typename iterator::value_type access(iterator it, int index){
+    return access_impl(it, index, typename iterator::iterator_type{});
+}
+
+// search function
+
+template <typename iterator>
+size_t search(iterator begin, iterator end, typename iterator::value_type value){
+    size_t index = 0;
+    for(iterator it = begin; it != end; ++it){
+        if(*it == value){
+            std::cout<<"the position of the value "<<value<<" is index "<<index<<"."<<std::endl;
+            return index;
+        }
+        ++index;
+    }
+    std::cout<<"the value "<<value<<" is not in the container."<<std::endl;
+    return index;
+}
 
 // visualization function
 
