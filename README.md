@@ -187,6 +187,8 @@ The execution strategy is below:
 
 
 1. Containers not only store data, but also offer member functions like `begin()` and `end()` for iterator access, and `insert()` and `delete()` for adding or removing elements.
+   >- `begin()`: return the iterator that point to the first data.
+   >- `end()`: return the iterator that point to the address just after the final data.
 2. The `access()` and `search()` functions are implemented as external template functions that operate on iterators.
 
 ### Syntax
@@ -274,22 +276,16 @@ public:
 
 #### Iterator
 
-An iterator is a pointer-like object used to traverse elements within a container, such as an array or a linked list. Different types of iterators support different operations, such as moving forward, backward, or performing random access. Iterators generalize the concept of a pointer, allowing for uniform interaction with various data structures.
+An iterator is a pointer-like object used to traverse elements within a container, such as an array or a linked list. Different types of iterators support different operations, such as moving forward, backward, or performing random access. Iterators generalize the concept of a pointer, allowing for uniform interaction with various data structures. Types of iterator used in my code is shown in the table below:
 
-```C++
-#include <vector>
-
-std::vector<int> numbers = {1, 2, 3, 4, 5};
-
-// Get an iterator to the beginning of the vector
-std::vector<int>::iterator it = numbers.begin();
-
-// Move the iterator forward
-it++;
-
-// Access the element the iterator points to
-int value = *it;
-```
+| Feature | Forward Iterator | Bidirectional Iterator | Random Access Iterator |
+| :--- | :--- | :--- | :--- |
+| **Tag Type** | `std::forward_iterator_tag` | `std::bidirectional_iterator_tag` | `std::random_access_iterator_tag` |
+| **Movement** | Single-pass, **Forward Only** (`++`) | **Forward and Backward** (`++`, `--`) | Arbitrary Jumps (Random Access) |
+| **Supported Operations** | `*it`, `++it`, `it == end`, `it != end` | All Forward Ops + **`--it`**, **`it--`** | All Bidirectional Ops + **Pointer Arithmetic** (`it+N`), **Comparison** (`<`, `>`), **Indexing** (`it[N]`) |
+| **Relative Comparison** | **No** (`<`, `>`) | **No** (`<`, `>`) | **Yes** (`<`, `>`, `<=`, `>=`) |
+| **Distance Calculation** | Requires $O(N)$ traversal | Requires $O(N)$ traversal | **$O(1)$** (Constant Time) via subtraction (`end - begin`) |
+| **Example Data Structure** | **Linked List** | **Doubly Linked List**, **Tree** | **Array**, **Dynamic Array** |
 
 #### Tag Type
 
@@ -316,18 +312,24 @@ The reason for using this syntax is that different iterators support different o
 
 ### Implement of Data Structure
 
-### Data Structure vs. C++ STL Container
+As mentioned above, the implement of data structure is via C++ language. The source code splits into three file:
 
-| Data Structure | C++ STL Container | Notes |
-| :--- | :--- | :--- |
-| **Array** | `std::array`, `std::vector` | `std::array` has a fixed size at compile time, while `std::vector` can be resized dynamically. |
-| **Linked List** | `std::list`, `std::forward_list` | `std::list` is a doubly linked list, `std::forward_list` is a singly linked list. |
-| **Tree** | `std::set`, `std::map`, `std::multiset`, `std::multimap` | These are typically implemented using **balanced binary search trees** (e.g., Red-Black Trees) to keep data sorted. |
-| **Heap** | `std::priority_queue` | The underlying data structure is a heap (by default, a max-heap), providing efficient access to the largest element. |
-| **Queue** | `std::queue` | A First-In, First-Out (FIFO) container. |
-| **Stack** | `std::stack` | A Last-In, First-Out (LIFO) container. |
-| **Graph** | **No direct equivalent** | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
-| **Hash Table** | `std::unordered_set`, `std::unordered_map` | Provides average O(1) time complexity for lookups, but the data is not sorted. |
+- `container.h`: The definition of classes and some functions about data structure—such as `search` and `access`.
+- `algorithms.h`: Contains the sorting functions might be used on data structure.
+- `main.cpp`: Main code that uses classes and functions in `container.h` and `algorithms.h` to demonstrates the implementation of data structure.
+
+The following table compares the container classes of different datastructure in C++ STL and this project:
+
+| Data Structure | C++ STL Container | My container | Notes |
+| :--- | :--- | :--- | :--- |
+| **Array** | `std::array`, `std::vector` | `dynamic_array` | `std::array` has a fixed size at compile time, while `std::vector` can be resized dynamically. |
+| **Linked List** | `std::list`, `std::forward_list` | `linked_list` | `std::list` is a doubly linked list, `std::forward_list` is a singly linked list. |
+| **Tree** | `std::set`, `std::map`, `std::multiset`, `std::multimap` | - | These are typically implemented using **balanced binary search trees** (e.g., Red-Black Trees) to keep data sorted. |
+| **Heap** | `std::priority_queue` | - | The underlying data structure is a heap (by default, a max-heap), providing efficient access to the largest element. |
+| **Queue** | `std::queue` | `queue` | A First-In, First-Out (FIFO) container. |
+| **Stack** | `std::stack` | `stack` | A Last-In, First-Out (LIFO) container. |
+| **Graph** | **No direct equivalent** | - | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
+| **Hash Table** | `std::unordered_set`, `std::unordered_map` | `hash_table` | Provides average O(1) time complexity for lookups, but the data is not sorted. |
 
 ## Git
 
