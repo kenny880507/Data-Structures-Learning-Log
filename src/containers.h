@@ -58,7 +58,7 @@ void print_container(const container& container_){
     std::cout << *begin << std::endl;
 }
 
-// dynameic array implementation
+// dynameic array
 
 template <typename T>
 class dynamic_array{
@@ -214,7 +214,40 @@ class dynamic_array{
     T* data;
 };
 
+// linked list 
 
+template <typename T>
+class linked_list{
+    public:
+    linked_list();
+    ~linked_list();
+    linked_list(const linked_list& other);
+    linked_list& operator=(const linked_list& other);
+    linked_list(linked_list&& other);
+    linked_list& operator=(linked_list&& other);
+    class node{
+        public:
+        friend class iterator;
+        node(const T& node_data): data(node_data){}
+        private:
+        T data;
+        node* next = nullptr;
+    }
+    class iterator{
+        public:
+        using value_type = T;
+        using iterator_type = foward_iterator_tag;
+        private:
+        node* ptr;
+    };
+    iterator begin();
+    iterator end();
+    void insert(const T& target, size_t position);
+    void remove(size_t position);
+    private:
+    node* head = nullptr;
+    size_t size = 0;
+};
 
 
 

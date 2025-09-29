@@ -280,7 +280,7 @@ An iterator is a pointer-like object used to traverse elements within a containe
 
 | Feature | Forward Iterator | Bidirectional Iterator | Random Access Iterator |
 | :--- | :--- | :--- | :--- |
-| **Tag Type** | `std::forward_iterator_tag` | `std::bidirectional_iterator_tag` | `std::random_access_iterator_tag` |
+| **Tag Type** | `forward_iterator_tag` | `bidirectional_iterator_tag` | `random_access_iterator_tag` |
 | **Movement** | Single-pass, **Forward Only** (`++`) | **Forward and Backward** (`++`, `--`) | Arbitrary Jumps (Random Access) |
 | **Supported Operations** | `*it`, `++it`, `it == end`, `it != end` | All Forward Ops + **`--it`**, **`it--`** | All Bidirectional Ops + **Pointer Arithmetic** (`it+N`), **Comparison** (`<`, `>`), **Indexing** (`it[N]`) |
 | **Relative Comparison** | **No** (`<`, `>`) | **No** (`<`, `>`) | **Yes** (`<`, `>`, `<=`, `>=`) |
