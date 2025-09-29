@@ -331,13 +331,26 @@ The following table compares the container classes of different datastructure in
 | **Graph** | **No direct equivalent** | - | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
 | **Hash Table** | `std::unordered_set`, `std::unordered_map` | `hash_table` | Provides average O(1) time complexity for lookups, but the data is not sorted. |
 
+### Big 5 of C++ class
+
+For each data structure class in C++, there are three construct method and two assignment method—namely "Big Five"–need to be define. In addition, the destructor is important to prevent memory leak. The following table illustrate the implementation of these function:
+
+| Special Member Function | English Name | Symbol/Prototype | Responsibility |
+| :--- | :--- | :--- | :--- |
+| **1. Constructor** | Constructor | `MyClass();` | Responsible for object initialization and **resource acquisition** (Acquisition). |
+| **2. Destructor** | Destructor | `~MyClass();` | Responsible for object cleanup and **resource release** (Release). Key to the **RAII principle**. |
+| **3. Copy Constructor** | Copy Constructor | `MyClass(const MyClass& other);` | Creates a new, independent object from an existing one via **Deep Copy**. |
+| **4. Copy Assignment** | Copy Assignment Operator | `MyClass& operator=(const MyClass& other);` | Allows an existing object to be **assigned** the value of another. Requires self-assignment check and memory handling. |
+| **5. Move Constructor** | Move Constructor | `MyClass(MyClass&& other);` | **Transfers** resource ownership (e.g., pointers) from a temporary object, typically setting the source to `nullptr`. |
+| **6. Move Assignment** | Move Assignment Operator | `MyClass& operator=(MyClass&& other);` | Allows an existing object to be move-assigned (resource transfer) from a temporary object. |
+
 ## Git
 
 This section will include some notes about usage of Git and GitHub.
 
 ### Initialize Local Repository.
 
-#### 1. Make a new directory named `<project-name>` and change directory
+**1. Make a new directory named `<project-name>` and change directory**
 
 Open the terminal, and input command below:
 
@@ -346,7 +359,7 @@ mkdir <project-name>
 cd <project-name>
 ```
 
-#### 2. Initialize local git repository
+**2. Initialize local git repository**
 
 Use `init` to initialize directory to a Git repository.
 
@@ -354,11 +367,11 @@ Use `init` to initialize directory to a Git repository.
 git init
 ```
 
-#### 3. Create any file in the `<project-name>` directory
+**3. Create any file in the `<project-name>` directory**
 
 Generate any file in project directory.
 
-#### 4. Use git command to stage and commit changes
+**4. Use git command to stage and commit changes**
 
 Use `add` to stage the change for the files.
 Use `commit` to commit staged changes.
@@ -371,7 +384,7 @@ git commit -m "<any-comment>"   #commit the already staged changes with a commen
 
 ### Make connection between computer and GitHub
 
-#### 1. Check if an SSH key already exists on the computer
+**1. Check if an SSH key already exists on the computer**
 
 Open the terminal (MacOS, Linux) or Git Bash (Windows), and input command below:
 
@@ -383,7 +396,7 @@ If there are some file like `id_ed25519.pub`, it means the computer already has 
 
 If the output is `No such file or directory`, proceed to `step 2.` to create a new key.
 
-#### 2. Create a new SSH key
+**2. Create a new SSH key**
 
 Enter the following command in the terminal to generate a new key pair. Ed25519 algorithm is used here.
 
@@ -399,7 +412,7 @@ Once completed, two files will be generated in your `.ssh` directory:
 - `id_ed25519`: This is your private key. Do not share this file with anyone!
 - `id_ed25519.pub`: This is your public key. We will copy the contents of this file to GitHub.
 
-#### 3. Add public key to your GitHub
+**3. Add public key to your GitHub**
 
 Check the contents of your public key by the following command in terminal or Git Bash:
 
@@ -411,7 +424,7 @@ _Copy_ the contents in `id_ed25519.pub`.
 
 Login to GitHub > Click your profile picture > `Settings` > Click `SSH and GPG keys` in left-hand menu > Click `New SSH key` > Type `<device-name>` in **Title** field > Paste public key contents in **Key** field > Click `Add SSH key`
 
-#### 4. Veify the SSH connection
+**4. Veify the SSH connection**
 
 Enter the command below to test:
 
@@ -425,7 +438,7 @@ ssh -T git@github.com
 
 ### Make connection between local repo and GitHub repo
 
-#### 1. Create a new empty repository on GitHub
+**1. Create a new empty repository on GitHub**
 
 - Log in to GitHub and click the + icon in the top-right corner.
 - Select `New repository` from the dropdown menu.
@@ -433,7 +446,7 @@ ssh -T git@github.com
 - Do not select any options (e.g., Add a README file), since you already have the files locally.
 - Click `Create repository` to finish.
 
-#### 2. Connect to local repository
+**2. Connect to local repository**
 
 Use the command below in terminal to link local and remote repos:
 
@@ -441,7 +454,7 @@ Use the command below in terminal to link local and remote repos:
 git remote add origin git@github.com:<GitHub-user-name>/<GitHub-repo-name>.git
 ```
 
-#### 3. Push local contents to GitHub
+**3. Push local contents to GitHub**
 
 Use `git push` command to upload local contents to GitHub repo.
 >- The main branch might be `main` or `master`. Use `git branch` to check.
