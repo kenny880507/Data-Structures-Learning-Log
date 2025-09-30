@@ -45,7 +45,7 @@ int main(){
     std::cout << "linked list implementation"<<std::endl;
     dash("[construct]");
     linked_list<int> LL(data,3);
-    print_container(DA);
+    print_container(LL);
     dash("[insert]");
     for(int i = 0; i < 5; ++i){
         LL.insert(i,LL.getSize());
