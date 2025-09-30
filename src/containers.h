@@ -50,12 +50,14 @@ size_t search(iterator begin, iterator end, typename iterator::value_type value)
 
 template<typename container>
 void print_container(const container& container_){
-    auto begin = container_.begin();
-    auto before_end = container_.end(); --before_end;
-    while(begin<before_end){
-        std::cout << *begin++ << ", ";
+    auto it = container_.begin();
+    auto next_it = ++container_.begin();
+    auto stop = container_.end();
+    while(next_it != stop){
+        ++next_it;
+        std::cout << *it++ << ", ";
     }
-    std::cout << *begin << std::endl;
+    std::cout << *it << std::endl;
 }
 
 // dynameic array
@@ -274,11 +276,12 @@ class linked_list{
     class node{
         public:
         friend class iterator;
+        friend class linked_list;
         node(const T& node_data): data(node_data){}
         private:
         T data;
         node* next = nullptr;
-    }
+    };
     class iterator{
         public:
         using value_type = T;
@@ -292,7 +295,7 @@ class linked_list{
         }
         iterator operator++(int){
             iterator temp = *this;
-            ++*this;
+            ++(*this);
             return temp;
         }
         bool operator==(const iterator& other){return ptr==other.ptr;}
@@ -300,8 +303,8 @@ class linked_list{
         private:
         node* ptr;
     };
-    iterator begin(){return head;}
-    iterator end(){return nullptr;}
+    iterator begin() const {return head;}
+    iterator end() const {return nullptr;}
     void insert(const T& target, size_t position){
         if(position>size) return;
         node* new_node = new node(target);
@@ -317,6 +320,8 @@ class linked_list{
             previous->next = new_node;
         }
         size += 1;
+        std::cout << "insert value " << target << " to index " << position << "..." << std::endl;
+        print_container(*this);
     }
     void remove(size_t position){
         if(size == 0 || position>size-1) return;
@@ -334,7 +339,10 @@ class linked_list{
             delete temp;
         }
         --size;
+        std::cout << "remove value from index " << position << "..." << std::endl;
+        print_container(*this);
     }
+    size_t getSize() const {return size;}
     private:
     node* head = nullptr;
     size_t size = 0;
