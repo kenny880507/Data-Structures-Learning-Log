@@ -13,6 +13,7 @@ This project is used to document the learning journey of data structures. I will
 ## Data Structure
 
 This section will introduce common containers in data structure. The content covers the definition of each container and the four fundamental operations: access, search, insert, and delete.
+> Since `delete` is a reserved keyword in C++, the `delete()` function is usually replaced with alternative names such as `remove()`.
 
 ### Introduction to Data Structure
 
@@ -186,7 +187,7 @@ The execution strategy is below:
   >It was observed during execution that arrays and linked lists handle insertions and deletions differently, particularly regarding capacity management, making it unsuitable to use templates for a unified function.
 
 
-1. Containers not only store data, but also offer member functions like `begin()` and `end()` for iterator access, and `insert()` and `delete()` for adding or removing elements.
+1. Containers not only store data, but also offer member functions like `begin()` and `end()` for iterator access, and `insert()` and ~~`delete()`~~ `remove()` for adding or removing elements.
    >- `begin()`: return the iterator that point to the first data.
    >- `end()`: return the iterator that point to the address just after the final data.
 2. The `access()` and `search()` functions are implemented as external template functions that operate on iterators.

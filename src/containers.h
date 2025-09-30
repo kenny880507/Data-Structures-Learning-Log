@@ -69,18 +69,18 @@ class dynamic_array{
             for(size_t i = 0; i <input_size; ++i) data[i] = input[i];
         }
     }
-    dynamic_array(const dynamic_array& other){
-            capacity = other.capacity;
-            size = other.size;
-            if(size>0){
-                for(int i = 0; i < size; ++i) data[i] = other.data[i];
-            } else {
-                data = nullptr;
-            }
-        }
     ~dynamic_array(){
         delete [] data;
         data = nullptr;
+    }
+    dynamic_array(const dynamic_array& other){
+        capacity = other.capacity;
+        size = other.size;
+        if(size>0){
+            for(int i = 0; i < size; ++i) data[i] = other.data[i];
+        } else {
+            data = nullptr;
+        }
     }
     dynamic_array& operator=(const dynamic_array& other){
         if(this != &other){
@@ -96,12 +96,12 @@ class dynamic_array{
         return *this;
         
     }
-    dynamic_array(dynamic_array&& other): capacity{other.capacity}, size{other.size}, data{other.data}{
+    dynamic_array(dynamic_array&& other) noexcept: capacity{other.capacity}, size{other.size}, data{other.data}{
         other.data = nullptr;
         other.size = 0;
         other.capacity = 0;
     }
-    dynamic_array& operator=(dynamic_array&& other){
+    dynamic_array& operator=(dynamic_array&& other) noexcept {
         if(this != &other)
         {
             delete [] data;
@@ -219,12 +219,58 @@ class dynamic_array{
 template <typename T>
 class linked_list{
     public:
-    linked_list();
-    ~linked_list();
-    linked_list(const linked_list& other);
-    linked_list& operator=(const linked_list& other);
-    linked_list(linked_list&& other);
-    linked_list& operator=(linked_list&& other);
+    linked_list(){}
+    linked_list(T* input, size_t input_size): size(input_size){
+        head = new node(*input);
+        node* current_node = head;
+        for(size_t i = 1; i < size; ++i){
+            current_node = current_node->next = new node(input[i]);
+        }
+    }
+    ~linked_list(){
+        node* current_node = head;
+        while(current_node!=nullptr){
+            node* next_to_delete = current_node->next;
+            delete current_node;
+            current_node = next_to_delete;
+        }
+        head = nullptr;
+        size = 0;
+    }
+    linked_list(const linked_list& other){
+        if(other.head == nullptr){
+            return;
+        }
+        head = new node(other.head->data);
+        node* current_new = head;
+        node* current_other = other.head->next;
+        while(current_other != nullptr){
+            current_new->next = new node(current_other->data);
+            current_other = current_other->next;
+            current_new = current_new->next;
+        }
+        size = other.size;
+    }
+    linked_list& operator=(const linked_list& other){
+        if(this != &other){
+            linked_list temp(other);
+            std::swap(head,temp.head);
+            std::swap(size,temp.size);
+        }
+        return *this;
+    }
+    linked_list(linked_list&& other) noexcept
+    : head(other.head), size(other.size){
+        other.head = nullptr;
+        other.size = 0;
+    }
+    linked_list& operator=(linked_list&& other) noexcept {
+        if(this != &other){
+            std::swap(head,other.head);
+            std::swap(size,other.size);
+        }
+        return *this;
+    }
     class node{
         public:
         friend class iterator;
@@ -237,13 +283,58 @@ class linked_list{
         public:
         using value_type = T;
         using iterator_type = foward_iterator_tag;
+        iterator(node* node_data = nullptr): ptr(node_data){}
+        T* operator->(){return &(ptr->data);}
+        T& operator*(){return ptr->data;}
+        iterator& operator++(){
+            ptr = ptr->next;
+            return *this;
+        }
+        iterator operator++(int){
+            iterator temp = *this;
+            ++*this;
+            return temp;
+        }
+        bool operator==(const iterator& other){return ptr==other.ptr;}
+        bool operator!=(const iterator& other){return ptr!=other.ptr;}
         private:
         node* ptr;
     };
-    iterator begin();
-    iterator end();
-    void insert(const T& target, size_t position);
-    void remove(size_t position);
+    iterator begin(){return head;}
+    iterator end(){return nullptr;}
+    void insert(const T& target, size_t position){
+        if(position>size) return;
+        node* new_node = new node(target);
+        if(position == 0){
+            new_node->next = head;
+            head = new_node;
+        } else {
+            node* previous = head;
+            for(size_t i = 0; i<position-1; ++i){
+                previous = previous->next;
+            }
+            new_node->next = previous->next;
+            previous->next = new_node;
+        }
+        size += 1;
+    }
+    void remove(size_t position){
+        if(size == 0 || position>size-1) return;
+        if(position == 0){
+            node* temp = head;
+            head = head->next;
+            delete temp;
+        } else {
+            node* previous = head;
+            for(size_t i = 0; i<position-1; ++i){
+                previous = previous->next;
+            }
+            node* temp = previous->next;
+            previous->next = temp->next;
+            delete temp;
+        }
+        --size;
+    }
     private:
     node* head = nullptr;
     size_t size = 0;
