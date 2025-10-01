@@ -46,10 +46,19 @@ size_t search(iterator begin, iterator end, typename iterator::value_type value)
     return index;
 }
 
+//modulo function
+
+template <typename T>
+T mod(T value, T modulus){
+    T residue = value % modulus;
+    if(residue>=0) return residue;
+    else{return modulus+residue;}
+}
+
 // visualization function
 
 template<typename container>
-void print_container(const container& container_){
+void print_container(container& container_){
     auto it = container_.begin();
     auto next_it = ++container_.begin();
     auto stop = container_.end();
@@ -65,6 +74,7 @@ void print_container(const container& container_){
 template <typename T>
 class dynamic_array{
     public:
+    dynamic_array(): data{new T[1]}, capacity{1}, size{0}{}
     dynamic_array(T* input, size_t input_size): size{input_size}, capacity{input_size}{
         if(input_size>0){
             data = new T[capacity];
@@ -177,8 +187,8 @@ class dynamic_array{
             return;
         }
     }
-    iterator begin() const{return iterator(data);}
-    iterator end() const{return iterator(data)+static_cast<ptrdiff_t>(size);}
+    iterator begin(){return iterator(data);}
+    iterator end(){return iterator(data)+static_cast<ptrdiff_t>(size);}
     void insert(const T& target, size_t position){
         if(position>size) return;
         if(capacity == size) expand();
@@ -303,8 +313,8 @@ class linked_list{
         private:
         node* ptr;
     };
-    iterator begin() const {return head;}
-    iterator end() const {return nullptr;}
+    iterator begin() {return iterator(head);}
+    iterator end() {return iterator(nullptr);}
     void insert(const T& target, size_t position){
         if(position>size) return;
         node* new_node = new node(target);
@@ -348,11 +358,228 @@ class linked_list{
     size_t size = 0;
 };
 
+//deque
 
+template <typename T>
+class deque{
+    public:
+    deque(): data{new T[1]}, capacity{1}, size_{0}, front_{0}{}
+    deque(T* input, size_t input_size): data{new T[capacity]}, capacity{input_size>0 ? input_size : 1}, size_{input_size}, front_{0}{
+        for(size_t i=0; i<size_; ++i){
+            data[i] = input[i];
+        }
+    }
+    ~deque(){delete [] data;}
+    deque(const deque& other): data{new T[other.capacity]}, capacity{other.capacity}, size_{other.size_}, front_{other.front_}{
+        for(size_t i=0; i<size_; ++i){
+            size_t position = (front_+i)%capacity;
+            data[position] = other.data[position];
+        }
+    }
+    deque& operator=(const deque& other){
+        if(this==&other) return *this;
+        capacity = other.capacity;
+        size_ = other.size_;
+        front_ = other.front_;
+        delete [] data;
+        data = new T[capacity];
+        for(size_t i=0; i<size_; ++i){
+            size_t position = (front_+i)%capacity;
+            data[position] = other.data[position];
+        }
+    }
+    deque(deque&& other) noexcept: data{other.data}, capacity{other.capacity}, size_{other.size_}, front_{other.front_}{
+        other.data = nullptr;
+        other.capacity = other.size_ = other.front_ = 0;
+    }
+    deque& operator=(deque&& other) noexcept {
+        if (this == &other) return *this;
+        delete [] data;
+        data = other.data;
+        capacity = other.capacity;
+        size_ = other.size_;
+        front_ = other.front_;
+        other.data = nullptr;
+        other.capacity = other.size_ = other.front_ = 0;
+    }
+    class iterator{
+        public:
+        using value_type = T;
+        using iterator_type = random_access_iterator_tag;
+        iterator(deque<T>* container_ptr, size_t logic_idx_): deque_ptr{container_ptr}, logic_idx{logic_idx_}{
+            if(logic_idx_>=deque_ptr->size_){
+                ptr = nullptr;
+                return;
+            }
+            ptr = deque_ptr->data + mod(logic_idx+deque_ptr->front_,deque_ptr->capacity);
+        }
+        T& operator*() const{return *ptr;}
+        T* operator->() const{return ptr;}
+        bool operator==(const iterator& other) const{return logic_idx==other.logic_idx;}
+        bool operator!=(const iterator& other) const{return logic_idx!=other.logic_idx;}
+        bool operator>(const iterator& other) const{return logic_idx>other.logic_idx;}
+        bool operator<(const iterator& other) const{return logic_idx<other.logic_idx;}
+        bool operator>=(const iterator& other) const{return logic_idx>=other.logic_idx;}
+        bool operator<=(const iterator& other) const{return logic_idx<=other.logic_idx;}
+        iterator operator+(ptrdiff_t distance){
+            ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) + distance;
+            if(output_index<0 || output_index>deque_ptr->size_){
+                throw std::out_of_range("Iterator offset out of bounds.");
+            }
+            return iterator(deque_ptr,static_cast<size_t>(output_index));
+        }
+        iterator& operator+=(ptrdiff_t distance){
+            ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) + distance;
+            if(output_index<0 || output_index>deque_ptr->size_){
+                throw std::out_of_range("Iterator offset out of bounds.");
+            }
+            logic_idx = output_index;
+            if(logic_idx<deque_ptr->size_){
+                ptr = deque_ptr->data + mod(logic_idx+deque_ptr->front_,deque_ptr->capacity);
+            } else {
+                ptr = nullptr;
+            }
+            return *this;
+        }
+        iterator operator-(ptrdiff_t distance){
+            ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) - distance;
+            if(output_index<0 || output_index>deque_ptr->size_){
+                throw std::out_of_range("Iterator offset out of bounds.");
+            }
+            return iterator(deque_ptr,static_cast<size_t>(output_index));
+        }
+        iterator& operator-=(ptrdiff_t distance){
+            ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) - distance;
+            if(output_index<0 || output_index>deque_ptr->size_){
+                throw std::out_of_range("Iterator offset out of bounds.");
+            }
+            logic_idx = output_index;
+            if(logic_idx<deque_ptr->size_){
+                ptr = deque_ptr->data + mod(logic_idx+deque_ptr->front_,deque_ptr->capacity);
+            } else {
+                ptr = nullptr;
+            }
+            return *this;
+        }
+        ptrdiff_t operator-(const iterator& other){
+            return static_cast<ptrdiff_t>(logic_idx) - static_cast<ptrdiff_t>(other.logic_idx);
+        }
+        iterator& operator++(){
+            *this+=1;
+            return *this;
+        }
+        iterator operator++(int){
+            iterator temp = *this;
+            *this+=1;
+            return temp;
+        }
+        iterator& operator--(){
+            *this-=1;
+            return *this;
+        }
+        iterator operator--(int){
+            iterator temp = *this;
+            *this-=1;
+            return temp;
+        }
+        private:
+        T* ptr;
+        size_t logic_idx;
+        deque<T>* deque_ptr;
+    };
+    iterator begin(){return iterator(this, 0)}
+    iterator end(){return iterator(this, size_)}
+    void expand(){
+        std::cout << "capacity is expanded from " << capacity <<" to ";
+        size_t old_capacity = capacity;
+        capacity *= 2;
+        T* temp = new T[capacity];
+        for(size_t i = 0; i<size_;++i){
+            size_t position = (front_+i)%old_capacity;
+            temp[i] = data[position];
+        }
+        delete [] data;
+        data = temp;
+        front_ = 0;
+        std::cout << capacity << std::endl;
+    }
+    void push_back(const T& value){
+        if(size_==capacity) expand();
+        size_t physic_idx = (front_+size_)%capacity;
+        data[physic_idx] = value;
+        ++size_;
+    }
+    void push_front(const T& value){
+        if(size_==capacity) expand();
+        front_ = mod(front_-1,capacity);
+        data[front_] = value;
+        ++size_;
+    }
+    void pop_back(){
+        if(size_==0) return;
+        --size_;
+    }
+    void pop_front(){
+        if(size_==0) return;
+        --size_;
+        front_ = (front_+1)%capacity;
+    }
+    T back(){
+        return *(--end());
+    }
+    T front(){
+        return *(begin());
+    }
+    size_t size(){return size_;}
+    private:
+    T* data;
+    size_t capacity;
+    size_t size_;
+    size_t front_;
+};
 
+//stack
 
+template <typename T>
+class stack{
+    public:
+    void push(const T& value){
+        deque_.push_back(value);
+    }
+    void pop(){
+        deque_.pop_back();
+    }
+    T top(){
+        return deque_.back();
+    }
+    size_t size() const {return deque_.size();}
+    bool empty() const {return size()==0;}
+    private:
+    deque<T> deque_;
+};
 
+//queue
 
+template <typename T>
+class queue{
+    public:
+    void enqueue(const T& value){
+        deque_.push_back(value);
+    }
+    void dequeue(){
+        deque_.pop_front();
+    }
+    T back(){
+        return deque_.back();
+    }
+    T front(){
+        return deque_.front();
+    }
+    size_t size() const {return deque_.size();}
+    bool empty() const {return size()==0;}
+    private:
+    deque<T> deque_;
+};
 
 
 
