@@ -19,6 +19,8 @@ This section will introduce common containers in data structure. The content cov
 
 #### Array
 
+![array](documents/images/Data%20Structure/array.png)
+
 - **Definition**: A structure in which elements are arranged contiguously in memory.
 - Access: Due to its contiguous layout, it supports random access. The time complexity for access is `O(1)`.
 - **Search**: For an unsorted array, searching requires traversal. The time complexity is `O(n)`.
@@ -26,6 +28,8 @@ This section will introduce common containers in data structure. The content cov
 - **Delete**: To delete an element, all data after the deleted item must be shifted one position to the left. The time complexity is `O(n)`.
 
 #### Linked List
+
+![Linked List](documents/images/Data%20Structure/linked_list.png)
 
 - **Definition**: A linked list consists of a sequence of elements called `nodes`. Each `node` contains its own data and a pointer to the next `node`. Depending on whether `nodes` also include a pointer to the previous `node`, the list is classified as either singly linked or doubly linked.
   >For convenience, define two `nodes` as `previous` and `current`. `previous` is the `node` just before the operation position, while `current` is the `node` to be inserted into or deleted from the linked list. The pointer to the next `node` is defined as `next`.
@@ -36,6 +40,8 @@ This section will introduce common containers in data structure. The content cov
   >Without `temp`, it's not possible to free the memory of `current`.
 
 #### Queue
+
+![Queue](documents/images/Data%20Structure/queue.png)
 
 - **Definition**: A queue is an abstract data structure (ADT) that can be implemented using either an `array` or a `linked list`. Its core principle is First-In-First-Out (FIFO), and it restricts random access—only allowing operations such as `enqueue`, `dequeue`, `front`, and `back`.
   >- `front`: return the first item of the queue.
@@ -51,6 +57,8 @@ This section will introduce common containers in data structure. The content cov
   - `Linked list`-based: Similar to `linked list`, `enqueue` and `dequeue` operations performs a constant time complexity of `O(1)`.
 
 #### Stack
+
+![Stack](documents/images/Data%20Structure/stack.png)
 
 - **Definition**: `Stack` is another ADT. It core principle is Last-In-First-Out (LIFO) only allowing actions such as `push`, `pop`, `top`.
   >- `top`: return the last item of the stack.
