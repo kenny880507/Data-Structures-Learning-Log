@@ -543,6 +543,19 @@ class deque{
 template <typename T>
 class stack{
     public:
+    stack(){}
+    stack(T* input, size_t input_size): deque_(input,input_size){}
+    stack(const stack& other): deque_(other){
+    }
+    stack& operator=(const stack& other){
+        if(this!=&other) deque_ = other.deque_;
+        return *this;
+    }
+    stack(stack&& other) noexcept: deque_(other){}
+    stack& operator=(stack&& other) noexcept{
+        if(this!=&other) deque_ = std::move(other.deque_);
+        return *this;
+    }
     void push(const T& value){
         deque_.push_back(value);
     }
@@ -563,6 +576,19 @@ class stack{
 template <typename T>
 class queue{
     public:
+    queue(){}
+    queue(T* input, size_t input_size): deque_(input,input_size){}
+    queue(const queue& other): deque_(other){
+    }
+    queue& operator=(const queue& other){
+        if(this!=&other) deque_ = other.deque_;
+        return *this;
+    }
+    queue(queue&& other) noexcept: deque_(other){}
+    queue& operator=(queue&& other) noexcept{
+        if(this!=&other) deque_ = std::move(other.deque_);
+        return *this;
+    }
     void enqueue(const T& value){
         deque_.push_back(value);
     }
