@@ -487,8 +487,8 @@ class deque{
         size_t logic_idx;
         deque<T>* deque_ptr;
     };
-    iterator begin(){return iterator(this, 0)}
-    iterator end(){return iterator(this, size_)}
+    iterator begin(){return iterator(this, 0);}
+    iterator end(){return iterator(this, size_);}
     void expand(){
         std::cout << "capacity is expanded from " << capacity <<" to ";
         size_t old_capacity = capacity;
