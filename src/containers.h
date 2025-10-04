@@ -364,7 +364,7 @@ template <typename T>
 class deque{
     public:
     deque(): data{new T[1]}, capacity{1}, size_{0}, front_{0}{}
-    deque(T* input, size_t input_size): data{new T[capacity]}, capacity{input_size>0 ? input_size : 1}, size_{input_size}, front_{0}{
+    deque(T* input, size_t input_size): data{new T[input_size]}, capacity{input_size>0 ? input_size : 1}, size_{input_size}, front_{0}{
         for(size_t i=0; i<size_; ++i){
             data[i] = input[i];
         }
@@ -567,6 +567,8 @@ class stack{
     }
     size_t size() const {return deque_.size();}
     bool empty() const {return size()==0;}
+    auto begin() { return deque_.begin(); }
+    auto end() { return deque_.end(); }
     private:
     deque<T> deque_;
 };
@@ -603,6 +605,8 @@ class queue{
     }
     size_t size() const {return deque_.size();}
     bool empty() const {return size()==0;}
+    auto begin() { return deque_.begin(); }
+    auto end() { return deque_.end(); }
     private:
     deque<T> deque_;
 };
