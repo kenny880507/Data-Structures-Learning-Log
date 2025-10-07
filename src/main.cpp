@@ -71,7 +71,7 @@ int main(){
     print_container(ST);
     dash("[push]");
     for(int i = 0; i < 5; ++i){
-        // 堆疊使用 push
+        //push
         ST.push(i + 3); // push 3, 4, 5, 6, 7
     }
     std::cout << "stack after push: ";
@@ -85,7 +85,7 @@ int main(){
         ST.pop();
     }
     std::cout << "stack after pop: ";
-    print_container(ST); // {0, 1, 2, 3, 4} (4是頂部)
+    print_container(ST); // {0, 1, 2, 3, 4}
 
     // queue test
     std::cout << "\nqueue implementation"<<std::endl;
@@ -94,11 +94,11 @@ int main(){
     print_container(QU);
     dash("[enqueue]");
     for(int i = 0; i < 5; ++i){
-        // 佇列使用 enqueue
+        //enqueue
         QU.enqueue(i + 3); // enqueue 3, 4, 5, 6, 7
     }
     std::cout << "queue after enqueue: ";
-    // 最終內容應為 {0, 1, 2, 3, 4, 5, 6, 7}，0是前端，7是後端
+    // {0, 1, 2, 3, 4, 5, 6, 7}
     print_container(QU);
     
     dash("[front]");
@@ -110,6 +110,6 @@ int main(){
         QU.dequeue();
     }
     std::cout << "queue after dequeue: ";
-    print_container(QU); // {3, 4, 5, 6, 7} (3是前端，7是後端)
+    print_container(QU); // {3, 4, 5, 6, 7}
     system("pause");
 }

@@ -430,7 +430,7 @@ class deque{
         }
         iterator& operator+=(ptrdiff_t distance){
             ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) + distance;
-            if(output_index<0 || output_index>deque_ptr->size_){
+            if(output_index<0 || static_cast<size_t>(output_index)>deque_ptr->size_){
                 throw std::out_of_range("Iterator offset out of bounds.");
             }
             logic_idx = output_index;
@@ -450,7 +450,7 @@ class deque{
         }
         iterator& operator-=(ptrdiff_t distance){
             ptrdiff_t output_index = static_cast<ptrdiff_t>(logic_idx) - distance;
-            if(output_index<0 || output_index>deque_ptr->size_){
+            if(output_index<0 || static_cast<size_t>(output_index)>deque_ptr->size_){
                 throw std::out_of_range("Iterator offset out of bounds.");
             }
             logic_idx = output_index;
@@ -611,9 +611,100 @@ class queue{
     deque<T> deque_;
 };
 
+template <typename T>
+class tree{
+    public:
+    tree(): height{0}{}
+    virtual void insert(const T& data) = 0;
+    virtual void remove(const T& data) = 0;
+    virtual bool search(const T& data) = 0;
+    virtual ~tree() = default; 
+    private:
+    size_t height;
+};
 
+template <typename T>
+class BST: public tree<T>{
+    public:
+    BST(): tree<T>{}, root{nullptr}{}
+    void insert(const T& data) override{
+        if(root==nullptr) root = new node(data);
+        else{
+            node* previous = nullptr;
+            node* current = root;
+            while(current!=nullptr){
+                previous = current;
+                if(data==current->value) return;
+                else if(data<current->value) current = current->left;
+                else current = current->right;
+            }
+            if(data<previous->value) previous->left = new node(data);
+            else previous->right = new node(data);
+        }
+    }
+    void remove(const T& data) override {
+        node* previous = nullptr;
+        node* current = root;
+        while (current != nullptr && current->value != data) {
+            previous = current;
+            if (data < current->value) current = current->left;
+            else current = current->right;
+        }
+        if (current == nullptr) return; // didn't find.
 
+        if (current->left != nullptr && current->right != nullptr){ // 2 childs
+            node* successor = current->right;
+            node* successor_prev = current; 
+            
+            while (successor->left != nullptr) {
+                successor_prev = successor;
+                successor = successor->left;
+            }
 
+            current->value = successor->value; // replace value of current
+            
+            current = successor; // new node needed to be delete
+            previous = successor_prev;
+        }
+        
+        node* child = (current->left != nullptr) ? current->left : current->right;
+
+        if (previous == nullptr){ // current is at root
+            root = child;
+        } else { // current is not at root
+            if (current == previous->left) {
+                previous->left = child;
+            } else {
+                previous->right = child;
+            }
+        }
+        delete current;
+    }
+    bool search(const T& data) override{
+        if(root==nullptr) return false;
+        node* current = root;
+        while(current!=nullptr){
+            if(data==current->value) return true;
+            if(data>current->value) current = current->right;
+            else current = current->left;
+        }
+        return false;
+    }
+    class node{
+        public:
+        node(const T& input): value{input}, left{nullptr}, right{nullptr}{}
+        ~node(){
+            left = nullptr;
+            right = nullptr;
+        }
+        private:
+        node* left;
+        node* right;
+        T value;
+    };
+    private:
+    node* root;
+};
 
 
 
