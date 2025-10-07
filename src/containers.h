@@ -627,6 +627,10 @@ template <typename T>
 class BST: public tree<T>{
     public:
     BST(): tree<T>{}, root{nullptr}{}
+    BST(const BST<T>& other): tree<T>{}{}
+    BST& operator=(const BST<T>& other){}
+    BST(BST<T>&& other) noexcept: tree<T>{} {}
+    BST& operator=(BST<T>&& other) noexcept{}
     void insert(const T& data) override{
         if(root==nullptr) root = new node(data);
         else{
@@ -693,10 +697,7 @@ class BST: public tree<T>{
     class node{
         public:
         node(const T& input): value{input}, left{nullptr}, right{nullptr}{}
-        ~node(){
-            left = nullptr;
-            right = nullptr;
-        }
+        ~node() = default;
         private:
         node* left;
         node* right;
@@ -704,6 +705,19 @@ class BST: public tree<T>{
     };
     private:
     node* root;
+    void delete_subtree(node* target){
+        if(target==nullptr) return;
+        delete_subtree(target->left);
+        delete_subtree(target->right);
+        delete target;
+    }
+    node* clone_subtree(const node* target){
+        if(target==nullptr) return;
+        new receiver = new node(target->value);
+        clone_subtree(receiver->left, target->left);
+        clone_subtree(receiver->right,target->right);
+        return receiver;
+    }
 };
 
 
