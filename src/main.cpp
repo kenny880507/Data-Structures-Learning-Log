@@ -111,5 +111,27 @@ int main(){
     }
     std::cout << "queue after dequeue: ";
     print_container(QU); // {3, 4, 5, 6, 7}
+
+    // BST test
+    int tree_data[7] = {4,2,6,1,3,5,7};
+    BST<int> BST_(tree_data,7);
+    dash("[postorder traversal]");
+    auto it1 = BST_.postorder_begin();
+    while(it1!=BST_.postorder_end()){
+        std::cout<<*it1++<<" ";
+    }
+    std::cout<<std::endl;
+    dash("[inorder traversal]");
+    auto it2 = BST_.inorder_begin();
+    while(it2!=BST_.inorder_end()){
+        std::cout<<*it2++<<" ";
+    }
+    std::cout<<std::endl;
+    dash("[preorder traversal]");
+    auto it3 = BST_.preorder_begin();
+    while(it3!=BST_.preorder_end()){
+        std::cout<<*it3++<<" ";
+    }
+    std::cout<<std::endl;
     system("pause");
 }

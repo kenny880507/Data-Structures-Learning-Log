@@ -8,14 +8,14 @@
 
 // define iterator tag
 
-struct foward_iterator_tag{}; // foward iterator support ++ operation
-struct bidirectional_iterator_tag: foward_iterator_tag{}; // bidirectional iterator support ++, -- operation
+struct forward_iterator_tag{}; // forward iterator support ++ operation
+struct bidirectional_iterator_tag: forward_iterator_tag{}; // bidirectional iterator support ++, -- operation
 struct random_access_iterator_tag: bidirectional_iterator_tag{}; // bidirectional iterator support ++, --, [] operation
 
 // access function
 
 template <typename iterator>
-typename iterator::value_type access_impl(iterator it, int index, foward_iterator_tag){
+typename iterator::value_type access_impl(iterator it, int index, forward_iterator_tag){
     while(index-- > 0) ++it;
     return *it;
 }
@@ -295,7 +295,7 @@ class linked_list{
     class iterator{
         public:
         using value_type = T;
-        using iterator_type = foward_iterator_tag;
+        using iterator_type = forward_iterator_tag;
         iterator(node* node_data = nullptr): ptr(node_data){}
         T* operator->(){return &(ptr->data);}
         T& operator*(){return ptr->data;}
@@ -387,6 +387,7 @@ class deque{
             size_t position = (front_+i)%capacity;
             data[position] = other.data[position];
         }
+        return *this;
     }
     deque(deque&& other) noexcept: data{other.data}, capacity{other.capacity}, size_{other.size_}, front_{other.front_}{
         other.data = nullptr;
@@ -401,6 +402,7 @@ class deque{
         front_ = other.front_;
         other.data = nullptr;
         other.capacity = other.size_ = other.front_ = 0;
+        return *this;
     }
     class iterator{
         public:
@@ -530,7 +532,7 @@ class deque{
     T front(){
         return *(begin());
     }
-    size_t size(){return size_;}
+    size_t size() const {return size_;}
     private:
     T* data;
     size_t capacity;
@@ -545,8 +547,7 @@ class stack{
     public:
     stack(){}
     stack(T* input, size_t input_size): deque_(input,input_size){}
-    stack(const stack& other): deque_(other){
-    }
+    stack(const stack& other): deque_(other.deque_){}
     stack& operator=(const stack& other){
         if(this!=&other) deque_ = other.deque_;
         return *this;
@@ -611,26 +612,47 @@ class queue{
     deque<T> deque_;
 };
 
+// tree
 template <typename T>
 class tree{
     public:
-    tree(): height{0}{}
+    tree(){}
     virtual void insert(const T& data) = 0;
     virtual void remove(const T& data) = 0;
     virtual bool search(const T& data) = 0;
-    virtual ~tree() = default; 
-    private:
-    size_t height;
+    virtual ~tree() = default;
 };
 
 template <typename T>
 class BST: public tree<T>{
     public:
     BST(): tree<T>{}, root{nullptr}{}
-    BST(const BST<T>& other): tree<T>{}{}
-    BST& operator=(const BST<T>& other){}
-    BST(BST<T>&& other) noexcept: tree<T>{} {}
-    BST& operator=(BST<T>&& other) noexcept{}
+    BST(const T* input_ary, const size_t ary_size): tree<T>{}, root{nullptr}{
+        for(size_t i=0; i<ary_size; ++i) insert(input_ary[i]);
+    }
+    BST(const BST<T>& other): tree<T>{}{
+        root = clone_subtree(other.root);
+    }
+    BST& operator=(const BST<T>& other){
+        if(this!=&other){
+            delete_subtree(root);
+            root = clone_subtree(other.root);
+        }
+        return *this;
+    }
+    BST(BST<T>&& other) noexcept: tree<T>{}, root{nullptr}{
+        std::swap(root, other.root);
+    }
+    BST& operator=(BST<T>&& other) noexcept{
+        if(this!=&other){
+            delete_subtree(root);
+            std::swap(root, other.root);
+        }
+        return *this;
+    }
+    ~BST(){
+        delete_subtree(root);
+    }
     void insert(const T& data) override{
         if(root==nullptr) root = new node(data);
         else{
@@ -696,6 +718,7 @@ class BST: public tree<T>{
     }
     class node{
         public:
+        friend class BST;
         node(const T& input): value{input}, left{nullptr}, right{nullptr}{}
         ~node() = default;
         private:
@@ -703,6 +726,193 @@ class BST: public tree<T>{
         node* right;
         T value;
     };
+    class pre_iterator{ //N>L>R
+        public:
+        using value_type = T;
+        using iterator_type = forward_iterator_tag;
+        pre_iterator(): current{nullptr}{}
+        pre_iterator(node* start_node): current{start_node}{
+            if(current!=nullptr){
+                node_stack.push(start_node);
+            } 
+            next();
+        }
+        pre_iterator(const pre_iterator& other): current{other.current}, node_stack{other.node_stack}{}
+        pre_iterator& operator=(const pre_iterator& other){
+            if(this!=&other){
+                current = other.current;
+                node_stack = other.node_stack;
+            }
+            return *this;
+        }
+        T& operator*(){return current->value;}
+        T* operator->(){return &current->value;}
+        pre_iterator& operator++(){
+            this->next();
+            return *this;
+        }
+        pre_iterator operator++(int){
+            pre_iterator temp(*this);
+            this->next();
+            return temp;
+        }
+        bool operator==(const pre_iterator& other) const {return current == other.current;}
+        bool operator!=(const pre_iterator& other) const {return !(*this == other);}
+        private:
+        node* current;
+        stack<node*> node_stack;
+        void next(){
+            if(node_stack.empty()){ // end condition
+                current = nullptr;
+                return;
+            } 
+            current = node_stack.top();
+            node_stack.pop();
+            if(current->right!=nullptr) node_stack.push(current->right);
+            if(current->left!=nullptr) node_stack.push(current->left);
+        }
+    };
+    pre_iterator preorder_begin(){
+        pre_iterator it(root);
+        return it;
+    }
+    pre_iterator preorder_end(){
+        pre_iterator it;
+        return it;
+    }
+    class in_iterator{ //L>N>R
+        public:
+        using value_type = T;
+        using iterator_type = forward_iterator_tag;
+        in_iterator(): current{nullptr}{}
+        in_iterator(node* start_node): current{start_node}{
+            if(current!=nullptr){
+                node_stack.push(start_node);
+                node* next_push = start_node->left;
+                while(next_push!=nullptr){
+                    node_stack.push(next_push);
+                    next_push = next_push->left;
+                }
+            } 
+            next();
+        }
+        in_iterator(const in_iterator& other): current{other.current}, node_stack{other.node_stack}{}
+        in_iterator& operator=(const in_iterator& other){
+            if(this!=&other){
+                current = other.current;
+                node_stack = other.node_stack;
+            }
+            return *this;
+        }
+        T& operator*(){return current->value;}
+        T* operator->(){return &current->value;}
+        in_iterator& operator++(){
+            this->next();
+            return *this;
+        }
+        in_iterator operator++(int){
+            in_iterator temp(*this);
+            this->next();
+            return temp;
+        }
+        bool operator==(const in_iterator& other) const {return current == other.current;}
+        bool operator!=(const in_iterator& other) const {return !(*this == other);}
+        private:
+        node* current;
+        stack<node*> node_stack;
+        void next(){
+            if(node_stack.empty()){ // end condition
+                current = nullptr;
+                return;
+            }
+            current = node_stack.top();
+            node_stack.pop();
+            if(current->right!=nullptr){
+                node_stack.push(current->right);
+                node* next_push = node_stack.top()->left;
+                while(next_push!=nullptr){
+                    node_stack.push(next_push);
+                    next_push = next_push->left;
+                }
+            }
+        }
+    };
+    in_iterator inorder_begin(){
+        in_iterator it(root);
+        return it;
+    }
+    in_iterator inorder_end(){
+        in_iterator it;
+        return it;
+    }
+    class post_iterator{ //L>R>N
+        public:
+        using value_type = T;
+        using iterator_type = forward_iterator_tag;
+        post_iterator(): current{nullptr}{}
+        post_iterator(node* start_node): current{start_node}{
+            if(current!=nullptr){
+                node_stack.push(start_node);
+                node* next_push = start_node->left;
+                while(next_push!=nullptr){
+                    node_stack.push(next_push);
+                    next_push = next_push->left;
+                }
+            } 
+            next();
+        }
+        post_iterator(const post_iterator& other): current{other.current}, node_stack{other.node_stack}{}
+        post_iterator& operator=(const post_iterator& other){
+            if(this!=&other){
+                current = other.current;
+                node_stack = other.node_stack;
+            }
+            return *this;
+        }
+        T& operator*(){return current->value;}
+        T* operator->(){return &current->value;}
+        post_iterator& operator++(){
+            this->next();
+            return *this;
+        }
+        post_iterator operator++(int){
+            post_iterator temp(*this);
+            this->next();
+            return temp;
+        }
+        bool operator==(const post_iterator& other) const {return current == other.current;}
+        bool operator!=(const post_iterator& other) const {return !(*this == other);}
+        private:
+        node* current;
+        stack<node*> node_stack;
+        node* last_pop;
+        void next() {
+            while (!node_stack.empty()) {
+                node* peek_node = node_stack.top();
+                if (peek_node->right == current || peek_node->right == nullptr) {
+                    current = peek_node;
+                    node_stack.pop();
+                    return; 
+                } 
+                else {
+                    node* next_push = peek_node->right;
+                    while(next_push != nullptr){
+                        node_stack.push(next_push);
+                        next_push = next_push->left;
+                    }
+                }
+            }
+            current = nullptr;
+        }
+    };
+    post_iterator postorder_begin(){
+        post_iterator it(root);
+        return it;
+    }
+    post_iterator postorder_end(){
+        post_iterator it;
+        return it;
+    }
     private:
     node* root;
     void delete_subtree(node* target){
@@ -712,15 +922,62 @@ class BST: public tree<T>{
         delete target;
     }
     node* clone_subtree(const node* target){
-        if(target==nullptr) return;
-        new receiver = new node(target->value);
-        clone_subtree(receiver->left, target->left);
-        clone_subtree(receiver->right,target->right);
+        if(target==nullptr) return nullptr;
+        node* receiver = new node(target->value);
+        receiver->left = clone_subtree(target->left);
+        receiver->right = clone_subtree(target->right);
         return receiver;
     }
 };
 
+// heap
 
+template <typename T>
+class heap{
+    public:
+    heap(): is_max_heap{true}, array_{}{}
+    void swim(size_t idx){
+        while(true){
+            if((array_[idx]>array_[father(idx)]) == is_max_heap){
+                std::swap(array_[idx],array_[father(idx)]);
+                idx = father(idx);
+            }
+            else break;
+        }
+    }
+    void sink(size_t idx){
+        while(true){
+            if((right_child(idx)<array_.getSize() && array_[idx]<array_[right_child(idx)]) == is_max_heap){
+                std::swap(array_[idx],array_[right_child(idx)]);
+                idx = right_child(idx);
+            }
+            else if((left_child(idx)<array_.getSize() && array_[idx]<array_[left_child(idx)]) == is_max_heap){
+                std::swap(array_[idx],array_[left_child(idx)]);
+                idx = left_child(idx);
+            }
+            else break;
+        }
+    }
+    void insert(const T& input){
+        size_t last_idx = array_.getSize();
+        array_.insert(T,last_idx);
+        swim(last_idx);
+    }
+    T extract_root(){
+        T output = array_[0];
+        std::swap(array_[0],array_[array_.getSize()-1]);
+        array_.remove(array_.getSize()-1);
+        sink(0);
+    }
+    void setMaxHeap(){is_max_heap=true;}
+    void setMinHeap(){is_max_heap=false;}
+    size_t father(size_t child_idx){return (child_idx-1)/2;}
+    size_t left_child(size_t father_idx){return father_idx*2+1;}
+    size_t right_child(size_t father_idx){return father_idx*2+2;}
+    private:
+    bool is_max_heap;
+    dynamic_array<T> array_;
+};
 
 
 
