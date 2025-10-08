@@ -937,7 +937,7 @@ class heap{
     public:
     heap(): is_max_heap{true}, array_{}{}
     void swim(size_t idx){
-        while(true){
+        while(idx>0 && true){
             if((array_[idx]>array_[father(idx)]) == is_max_heap){
                 std::swap(array_[idx],array_[father(idx)]);
                 idx = father(idx);
@@ -960,7 +960,7 @@ class heap{
     }
     void insert(const T& input){
         size_t last_idx = array_.getSize();
-        array_.insert(T,last_idx);
+        array_.insert(input,last_idx);
         swim(last_idx);
     }
     T extract_root(){
@@ -968,6 +968,7 @@ class heap{
         std::swap(array_[0],array_[array_.getSize()-1]);
         array_.remove(array_.getSize()-1);
         sink(0);
+        return output;
     }
     void setMaxHeap(){is_max_heap=true;}
     void setMinHeap(){is_max_heap=false;}
