@@ -418,6 +418,19 @@ These functions provide the primary interface for users to interact with the arr
     }
     ```
 
+##### Inner Class: iterator
+
+The nested `iterator` class implements all operations required for a **Random Access Iterator**.
+
+* **Type Aliases:**
+    ```cpp
+    using value_type = T;
+    using iterator_type = random_access_iterator_tag;
+    ```
+* **Key Operators:** Implements `operator*()`, `operator->()`, and all comparison operators.
+* **Random Access Support:** Implements pointer arithmetic (`operator+`, `operator+=`, `operator-`, `operator-=`) for $O(1)$ jumps and distance calculation.
+* **Increment/Decrement:** Implements both pre-fix (`operator++()`) and post-fix (`operator++(int)`) increment/decrement operators.
+
 * **`void remove(size_t position)`**
     * **Purpose:** Deletes the element at the specified `position`. Time complexity is **$O(N)$** due to shifting.
     * **Logic:** Shifts all subsequent elements one position to the left using iterators to close the gap, and decrements `size`.
@@ -459,19 +472,6 @@ These functions provide the primary interface for users to interact with the arr
         }
     }
     ```
-
-### Inner Class: iterator
-
-The nested `iterator` class implements all operations required for a **Random Access Iterator**.
-
-* **Type Aliases:**
-    ```cpp
-    using value_type = T;
-    using iterator_type = random_access_iterator_tag;
-    ```
-* **Key Operators:** Implements `operator*()`, `operator->()`, and all comparison operators.
-* **Random Access Support:** Implements pointer arithmetic (`operator+`, `operator+=`, `operator-`, `operator-=`) for $O(1)$ jumps and distance calculation.
-* **Increment/Decrement:** Implements both pre-fix (`operator++()`) and post-fix (`operator++(int)`) increment/decrement operators.
 
 ### linked_list Implementation Summary
 
