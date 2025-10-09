@@ -363,6 +363,485 @@ For each data structure class in C++, there are three construct method and two a
 | **5. Move Constructor** | Move Constructor | `MyClass(MyClass&& other);` | **Transfers** resource ownership (e.g., pointers) from a temporary object, typically setting the source to `nullptr`. |
 | **6. Move Assignment** | Move Assignment Operator | `MyClass& operator=(MyClass&& other);` | Allows an existing object to be move-assigned (resource transfer) from a temporary object. |
 
+### dynamic_array Implementation Summary
+
+The `dynamic_array` class manages a contiguous block of memory, mimicking the structure and behavior of `std::vector`.
+
+#### Private Members
+
+These members manage the internal state and resources of the array.
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `data` | `T*` | **Raw pointer** to the dynamically allocated memory block where all elements are stored. It is the primary resource managed by the class. |
+| `capacity` | `size_t` | The **total allocated space** (in terms of elements) currently available in the `data` array. |
+| `size` | `size_t` | The **current number of elements** actually stored and initialized in the array. (`size <= capacity`). |
+
+#### Public Members (Non-Big Six Functions)
+
+These functions provide the primary interface for users to interact with the array and control its size.
+
+* **`iterator begin()` / `iterator end()`**
+    * **Purpose:** Provide the standard iterator interface to enable traversal. `begin()` points to the first element; `end()` points **one position past** the last element.
+
+    ```cpp
+    iterator begin(){return iterator(data);}
+    iterator end(){return iterator(data)+static_cast<ptrdiff_t>(size);}
+    ```
+
+* **`size_t getSize() const`**
+    * **Purpose:** Returns the current number of elements in the array (the value of `size`).
+
+    ```cpp
+    size_t getSize() const{return size;}
+    ```
+
+* **`void insert(const T& target, size_t position)`**
+    * **Purpose:** Inserts a new element at the specified `position`. Time complexity is **$O(N)$** due to shifting.
+    * **Logic:** Checks if `expand()` is needed. It shifts elements to the right using iterators, places the `target` element at the insertion point, and increments `size`.
+
+    ```cpp
+    void insert(const T& target, size_t position){
+        if(position>size) return;
+        if(capacity == size) expand();
+        iterator giver = end(); --giver;
+        iterator receiver = end();
+        iterator stop_point = begin() + static_cast<ptrdiff_t>(position);
+        while(giver >= stop_point){
+            *receiver = *giver;
+            --receiver;
+            --giver;
+        }
+        *receiver = target;
+        size += 1;
+        // ... (visualization code omitted)
+    }
+    ```
+
+* **`void remove(size_t position)`**
+    * **Purpose:** Deletes the element at the specified `position`. Time complexity is **$O(N)$** due to shifting.
+    * **Logic:** Shifts all subsequent elements one position to the left using iterators to close the gap, and decrements `size`.
+
+    ```cpp
+    void remove(size_t position){
+        if(position>=size) return;
+        iterator giver = begin() + static_cast<ptrdiff_t>(position); ++giver;
+        iterator receiver = begin() + static_cast<ptrdiff_t>(position);
+        iterator stop_point = end();
+        while(giver < stop_point) {
+            *receiver = *giver;
+            ++receiver;
+            ++giver;
+        }
+        size -= 1;
+        // ... (visualization code omitted)
+    }
+    ```
+
+#### Capacity Management
+
+* **`void expand()`**
+    * **Purpose:** Increases the memory allocation of the array when it is full (`size == capacity`).
+    * **Logic:** Doubles the current `capacity`, allocates a new memory block (`T* temp`), copies the existing data, deletes the old `data` block, and updates the `data` pointer. This ensures **Amortized $O(1)$** insertion time.
+
+    ```cpp
+    void expand(){
+        if(capacity == size){
+            // ... (visualization code omitted)
+            capacity *= 2;
+            T* temp = new T[capacity];
+            for(int i = 0; i<size;++i) temp[i] = data[i];
+            delete [] data;
+            data = temp;
+            // ... (visualization code omitted)
+        } else {
+            return;
+        }
+    }
+    ```
+
+### Inner Class: iterator
+
+The nested `iterator` class implements all operations required for a **Random Access Iterator**.
+
+* **Type Aliases:**
+    ```cpp
+    using value_type = T;
+    using iterator_type = random_access_iterator_tag;
+    ```
+* **Key Operators:** Implements `operator*()`, `operator->()`, and all comparison operators.
+* **Random Access Support:** Implements pointer arithmetic (`operator+`, `operator+=`, `operator-`, `operator-=`) for $O(1)$ jumps and distance calculation.
+* **Increment/Decrement:** Implements both pre-fix (`operator++()`) and post-fix (`operator++(int)`) increment/decrement operators.
+
+### linked_list Implementation Summary
+
+The `linked_list` is implemented as a singly linked list, utilizing nodes and pointers for efficient element manipulation.
+
+#### Private Members
+
+These members manage the internal state and structure of the list.
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `head` | `node*` | Pointer to the **first node** (the head) of the list. It is `nullptr` if the list is empty. |
+| `size` | `size_t` | The **current number of elements** (nodes) in the list. |
+
+#### Public Members (Non-Big Six Functions)
+
+These functions provide the primary interface for users to interact with the list.
+
+* **`iterator begin()` / `iterator end()`**
+    * **Purpose:** Provide the standard iterator interface. `begin()` returns an iterator pointing to the `head` node. `end()` returns an iterator pointing to `nullptr` (the standard stopping condition).
+
+    ```cpp
+    iterator begin() {return iterator(head);}
+    iterator end() {return iterator(nullptr);}
+    ```
+
+* **`size_t getSize() const`**
+    * **Purpose:** Returns the current number of elements in the list (the value of `size`).
+
+    ```cpp
+    size_t getSize() const {return size;}
+    ```
+
+* **`void insert(const T& target, size_t position)`**
+    * **Purpose:** Inserts a new node containing `target` at the specified `position`. Time complexity is **$O(N)$** to find the position, but **$O(1)$** for the actual pointer manipulation.
+    * **Logic:** Allocates a new node. If `position == 0`, the new node becomes the new `head`. Otherwise, it traverses to the node *before* the insertion point and updates its `next` pointer. Finally, it increments `size`.
+
+    ```cpp
+    void insert(const T& target, size_t position){
+        if(position>size) return;
+        node* new_node = new node(target);
+        if(position == 0){
+            new_node->next = head;
+            head = new_node;
+        } else {
+            node* previous = head;
+            for(size_t i = 0; i<position-1; ++i){
+                previous = previous->next;
+            }
+            new_node->next = previous->next;
+            previous->next = new_node;
+        }
+        size += 1;
+        // ... (visualization code omitted)
+    }
+    ```
+
+* **`void remove(size_t position)`**
+    * **Purpose:** Deletes the node at the specified `position`. Time complexity is **$O(N)$** to find the node, but **$O(1)$** for the pointer manipulation and memory release.
+    * **Logic:** Finds the node *before* the target. It then updates the `next` pointer to skip the target node, stores the target node in a temporary pointer (`temp`), and uses `delete temp` to free the memory. Finally, it decrements `size`.
+
+    ```cpp
+    void remove(size_t position){
+        if(size == 0 || position>size-1) return;
+        if(position == 0){
+            node* temp = head;
+            head = head->next;
+            delete temp;
+        } else {
+            node* previous = head;
+            for(size_t i = 0; i<position-1; ++i){
+                previous = previous->next;
+            }
+            node* temp = previous->next;
+            previous->next = temp->next;
+            delete temp;
+        }
+        --size;
+        // ... (visualization code omitted)
+    }
+    ```
+
+##### Inner Class: iterator
+
+The nested `iterator` class implements the **Forward Iterator** interface.
+
+* **Type Aliases:**
+    ```cpp
+    using value_type = T;
+    using iterator_type = forward_iterator_tag;
+    ```
+* **Core Operators:** Implements `operator*()`, `operator->()`, and comparison operators (`==`, `!=`).
+* **Traversal Support:** Implements the pre-fix (`operator++()`) and post-fix (`operator++(int)`) increment operators, which move the internal pointer (`ptr`) to the next node (`ptr->next`).
+
+##### Inner Class: node
+
+The nested `node` class defines the element structure of the list.
+
+* **Members:** Contains the element data (`T data`) and a pointer to the next node (`node* next = nullptr`).
+* **Friendship:** Declares `iterator` and `linked_list` as `friend` classes to allow them to directly access and modify the private `data` and `next` pointer of the node.
+
+### deque (Double-Ended Queue) Implementation Summary
+
+The `deque` is implemented using a **circular array** to achieve constant time complexity for operations at both ends.
+
+#### Private Members
+
+These members manage the internal state and circular array logic.
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `data` | `T*` | **Raw pointer** to the dynamically allocated underlying array. |
+| `capacity` | `size_t` | The **total allocated space** in the array. |
+| `size_` | `size_t` | The **current number of elements** stored in the deque. |
+| `front_` | `size_t` | The **physical index** in the array where the first element is located. This index wraps around. |
+
+#### Public Members (Non-Big Six Functions)
+
+These functions provide the primary interface for users, focusing on efficient endpoint access.
+
+* **`iterator begin()` / `iterator end()`**
+    * **Purpose:** Provide the standard iterator interface. `begin()` points to the first logical element (index 0). `end()` points one position past the last logical element (`size_`).
+
+    ```cpp
+    iterator begin(){return iterator(this, 0);}
+    iterator end(){return iterator(this, size_);}
+    ```
+
+* **`size_t size() const`**
+    * **Purpose:** Returns the current number of elements in the deque.
+
+    ```cpp
+    size_t size() const {return size_;}
+    ```
+
+* **`T back()` / `T front()`**
+    * **Purpose:** Returns the value of the last and first elements, respectively, without removal.
+
+    ```cpp
+    T back(){
+        return *(--end());
+    }
+    T front(){
+        return *(begin());
+    }
+    ```
+
+* **`void push_back(const T& value)`**
+    * **Purpose:** Adds an element to the back (tail) of the deque. Time complexity is **$O(1)$** (Amortized).
+    * **Logic:** Checks for `expand()`. Uses modulo arithmetic `(front_ + size_) % capacity` to calculate the insertion index, then increments `size_`.
+
+    ```cpp
+    void push_back(const T& value){
+        if(size_==capacity) expand();
+        size_t physic_idx = (front_+size_)%capacity;
+        data[physic_idx] = value;
+        ++size_;
+    }
+    ```
+
+* **`void push_front(const T& value)`**
+    * **Purpose:** Adds an element to the front (head) of the deque. Time complexity is **$O(1)$** (Amortized).
+    * **Logic:** Checks for `expand()`. Decrements and wraps `front_` using modulo arithmetic, then inserts the value and increments `size_`.
+
+    ```cpp
+    void push_front(const T& value){
+        if(size_==capacity) expand();
+        front_ = mod(front_-1,capacity);
+        data[front_] = value;
+        ++size_;
+    }
+    ```
+
+* **`void pop_back()` / `void pop_front()`**
+    * **Purpose:** Removes the element from the back or front, respectively. Time complexity is **$O(1)$**.
+    * **Logic:** `pop_back` simply decrements `size_`. `pop_front` increments `front_` and decrements `size_`, using modulo arithmetic for wrap-around.
+
+    ```cpp
+    void pop_back(){
+        if(size_==0) return;
+        --size_;
+    }
+    void pop_front(){
+        if(size_==0) return;
+        --size_;
+        front_ = (front_+1)%capacity;
+    }
+    ```
+
+* **`void expand()`**
+    * **Purpose:** Reallocates memory when the array is full.
+    * **Logic:** Doubles capacity, allocates new memory, moves elements to the new block starting at index 0 to simplify the circular structure, deletes the old data, and resets `front_ = 0`. This is an **$O(N)$** operation.
+
+    ```cpp
+    void expand(){
+        // ... (visualization code omitted)
+        size_t old_capacity = capacity;
+        capacity *= 2;
+        T* temp = new T[capacity];
+        for(size_t i = 0; i<size_;++i){
+            size_t position = (front_+i)%old_capacity;
+            temp[i] = data[position];
+        }
+        delete [] data;
+        data = temp;
+        front_ = 0;
+        // ... (visualization code omitted)
+    }
+    ```
+
+##### Inner Class: iterator
+
+The nested `iterator` class implements the **Random Access Iterator**.
+
+* **Type Aliases:**
+    ```cpp
+    using value_type = T;
+    using iterator_type = random_access_iterator_tag;
+    ```
+* **Key Members:** Manages the container pointer (`deque_ptr`), **physical pointer** (`T* ptr`), and **logical index** (`size_t logic_idx`).
+* **Complexity:** Implements full pointer arithmetic and comparison operators. Requires extensive use of the `mod()` helper function to correctly map the logical index to the physical pointer location within the circular array.
+
+---
+
+### `stack` Implementation Summary
+
+The `stack` class implements the LIFO (Last-In-First-Out) principle by using the `deque` container as an **adapter**.
+
+#### Private Members
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `deque_` | `deque<T>` | The underlying container used to store the stack elements. |
+
+#### Public Members (Non-Big Six Functions)
+
+All core stack operations are delegated to the `deque`'s $O(1)$ endpoint methods.
+
+* **`void push(const T& value)`**
+    * **Purpose:** Adds an element to the top of the stack. Time complexity is **$O(1)$** (Amortized).
+    * **Logic:** Delegates to the deque's back insertion: `deque_.push_back(value);`
+* **`void pop()`**
+    * **Purpose:** Removes the element from the top of the stack. Time complexity is **$O(1)$**.
+    * **Logic:** Delegates to the deque's back removal: `deque_.pop_back();`
+* **`T top()`**
+    * **Purpose:** Returns the value of the top element without removing it.
+    * **Logic:** Delegates to the deque's back access: `deque_.back();`
+* **`size_t size() const` / `bool empty() const`**
+    * **Purpose:** Returns the size and checks if the stack is empty.
+
+---
+
+### `queue` Implementation Summary
+
+The `queue` class implements the FIFO (First-In-First-Out) principle by using the `deque` container as an **adapter**.
+
+#### Private Members
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `deque_` | `deque<T>` | The underlying container used to store the queue elements. |
+
+#### Public Members (Non-Big Six Functions)
+
+All core queue operations are delegated to the `deque`'s $O(1)$ endpoint methods.
+
+* **`void enqueue(const T& value)`**
+    * **Purpose:** Adds an element to the back of the queue. Time complexity is **$O(1)$** (Amortized).
+    * **Logic:** Delegates to the deque's back insertion: `deque_.push_back(value);`
+* **`void dequeue()`**
+    * **Purpose:** Removes the element from the front of the queue. Time complexity is **$O(1)$**.
+    * **Logic:** Delegates to the deque's front removal: `deque_.pop_front();`
+* **`T front()` / `T back()`**
+    * **Purpose:** Returns the value of the front and back elements without removing them.
+    * **Logic:** Delegates to the deque's front/back access: `deque_.front()` and `deque_.back()`.
+* **`size_t size() const` / `bool empty() const`**
+    * **Purpose:** Returns the size and checks if the queue is empty.
+
+---
+
+### `BST` (Binary Search Tree) Implementation Summary
+
+The `BST` implements a fundamental binary search tree structure with distinct iterators for Depth-First Search (DFS) traversals.
+
+#### Private Members
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `root` | `node*` | Pointer to the root node of the tree. |
+| `delete_subtree` | `void` helper | Recursively cleans up memory for all nodes in a subtree. Essential for the destructor and copy assignment. |
+| `clone_subtree` | `node*` helper | Recursively performs deep copying of an entire subtree. Essential for the copy constructor and copy assignment. |
+
+#### Public Members (Non-Big Six Functions)
+
+* **`void insert(const T& data)` (Override)**
+    * **Purpose:** Inserts a new value while maintaining the BST property (left < parent < right).
+    * **Logic:** Traverses the tree to find the correct leaf position. Performance is **$O(\log N)$** (best/average case) or **$O(N)$** (worst-case, unbalanced).
+* **`void remove(const T& data)` (Override)**
+    * **Purpose:** Deletes a node. Handles zero, one, or two children cases.
+    * **Logic:** Finds the node. If the node has two children, it is replaced by its **inorder successor** (the smallest node in the right subtree) to maintain the BST property. Performance is **$O(\log N)$** or **$O(N)$**.
+* **`bool search(const T& data)` (Override)**
+    * **Purpose:** Finds a value by traversing the tree based on comparison. Performance is **$O(\log N)$** or **$O(N)$**.
+
+##### Inner Class: `node`
+
+The nested `node` class defines the element structure of the BST.
+
+* **Members:** Contains the element value (`T value`) and pointers to the left and right children (`node* left`, `node* right`).
+
+##### Traversal Iterators (`pre_iterator`, `in_iterator`, `post_iterator`)
+
+Three separate classes are defined, all implementing the **Forward Iterator** interface, using an internal `stack<node*>` to manage non-recursive traversal state.
+
+* **`preorder_begin()` / `inorder_begin()` / `postorder_begin()`:**
+    * **Purpose:** Returns the respective DFS iterator starting at the root.
+* **`preorder_end()` / `inorder_end()` / `postorder_end()`:**
+    * **Purpose:** Returns the designated `end` iterator (where `current` is `nullptr`) for loop termination.
+
+---
+
+### `heap` (Binary Heap) Implementation Summary
+
+The `heap` implements a complete binary tree structure (Max-Heap or Min-Heap) using a `dynamic_array` as its base.
+
+#### Private Members
+
+| Member | Type | Purpose |
+| :--- | :--- | :--- |
+| `is_max_heap` | `bool` | Flag that determines the heap type (`true` for Max-Heap, `false` for Min-Heap). |
+| `array_` | `dynamic_array<T>` | The underlying container that stores the heap elements in contiguous memory. |
+
+#### Public Members (Non-Big Six Functions)
+
+* **`void insert(const T& input)`**
+    * **Purpose:** Adds a new element to the heap. Performance is **$O(\log N)$**.
+    * **Logic:** Inserts the element at the end of the `array_` (using `array_.insert`) and then calls **`swim(last_idx)`** to restore the heap property by moving the new element up the tree.
+
+    ```cpp
+    void insert(const T& input){
+        size_t last_idx = array_.getSize();
+        array_.insert(input,last_idx);
+        swim(last_idx);
+    }
+    ```
+
+* **`T extract_root()`**
+    * **Purpose:** Removes and returns the root element (the extreme value). Performance is **$O(\log N)$**.
+    * **Logic:** Swaps the root with the last element, removes the last element (using `array_.remove`), and then calls **`sink(0)`** to restore the heap property by moving the new root down the tree.
+
+* **`void setMaxHeap()` / `void setMinHeap()`**
+    * **Purpose:** Changes the `is_max_heap` flag.
+
+    ```cpp
+    void setMaxHeap(){is_max_heap=true;}
+    void setMinHeap(){is_max_heap=false;}
+    ```
+
+* **`size_t father(size_t child_idx)` / `size_t left_child(...)` / `size_t right_child(...)`**
+    * **Purpose:** Utility functions to calculate the index of parent or child nodes based on the array's $2i+1$ heap convention.
+
+#### Capacity Management
+
+* **`void swim(size_t idx)`**
+    * **Purpose:** Restores the heap property by moving an element *up* the tree towards the root. Used after insertion.
+    * **Logic:** Compares the element at `idx` with its parent; if they violate the heap rule, they are swapped, and the process repeats. This moves the element at most $\log N$ levels.
+
+* **`void sink(size_t idx)`**
+    * **Purpose:** Restores the heap property by moving an element *down* the tree towards the leaves. Used after `extract_root`.
+    * **Logic:** Compares the element at `idx` with its largest (or smallest) child; if they violate the rule, it is swapped with the child, and the process repeats. This moves the element at most $\log N$ levels.
+
 ## Git
 
 This section will include some notes about usage of Git and GitHub.
