@@ -935,10 +935,32 @@ class BST: public tree<T>{
 template <typename T>
 class heap{
     public:
-    heap(): is_max_heap{true}, array_{}{}
+    heap(bool is_max_heap_): is_max_heap{is_max_heap_}, array_{}{}
+    heap(const T* input_ary, const size_t ary_size, bool is_max_heap_): is_max_heap{is_max_heap_}, array_{input_ary,ary_size}{
+        size_t size = array_.getSize();
+        if(size<2) return;
+        for(size_t i=father(szie-1); i>=0; --i) sink(i);
+    }
+    heap(const heap& other): is_max_heap{other.is_max_heap}, array_{other.array_}{}
+    heap& operator=(const heap& other){
+        if(this!=&other){
+            is_max_heap = other.is_max_heap;
+            array_ = other.array_;
+        }
+        return *this;
+    }
+    heap(heap&& other) noexcept: is_max_heap{other.is_max_heap}, array_{std::move(other.array_)}{}
+    heap& operator=(heap&& other) noexcept{
+        if(this!=&other){
+            is_max_heap = other.is_max_heap;
+            array_ = std::move(other.array_);
+        }
+        return *this;
+    }
+    ~heap() = default;
     void swim(size_t idx){
         while(idx>0 && true){
-            if((array_[idx]>array_[father(idx)]) == is_max_heap){
+            if(array_[idx]>array_[father(idx)] == is_max_heap){
                 std::swap(array_[idx],array_[father(idx)]);
                 idx = father(idx);
             }
@@ -946,16 +968,20 @@ class heap{
         }
     }
     void sink(size_t idx){
+        size_t size = array_.getSize();
         while(true){
-            if((right_child(idx)<array_.getSize() && array_[idx]<array_[right_child(idx)]) == is_max_heap){
-                std::swap(array_[idx],array_[right_child(idx)]);
-                idx = right_child(idx);
+            size_t swap_idx = idx;
+            size_t left = left_child(swap_idx);
+            size_t right = right_child(swap_idx);
+
+            if(left<size && array_[idx]<array_[left] == is_max_heap){
+                swap_idx = left;
             }
-            else if((left_child(idx)<array_.getSize() && array_[idx]<array_[left_child(idx)]) == is_max_heap){
-                std::swap(array_[idx],array_[left_child(idx)]);
-                idx = left_child(idx);
-            }
-            else break;
+            if(right<size) swap_idx = (array_[right]>array_[left] == is_max_heap)? right: swap_idx;
+            
+            if(swap_idx==idx) break;
+            std::swap(array_[idx],array_[swap_idx]);
+            idx = swap_idx;
         }
     }
     void insert(const T& input){

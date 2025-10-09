@@ -96,6 +96,7 @@ This section will introduce common containers in data structure. The content cov
   1. There is a special `node` called the `root`, which has no `parent`.
   2. Except for the root, every `node` has exactly one `parent`.
   3. Between any two `nodes` in the tree, there exists exactly one simple path—meaning the tree contains no cycles.
+
 - **Term**
   - `root`: The top `node` of a tree, which is the only `node` without `parent`.
   - `parent`: A `node` directly above another `node`, connected to it via an `edge`.
@@ -107,6 +108,7 @@ This section will introduce common containers in data structure. The content cov
   - `degree of tree`: The maximum degree among all `nodes` in the tree.
   - `depth`: The length of the path (number of edges) from the `root` to a given `node`.
   - `height`: The length of the longest path from a `node` to its farthest `leaf`. The `height` of the tree is the `height` of its `root`.
+
 - **Traversal**
    - Depth-First Search (DFS): This type of traversal explores the branches of a tree as deeply as possible before backtracking, continuing until all `leaves` are reached. There are three main types:
 
@@ -149,15 +151,23 @@ This section will introduce common containers in data structure. The content cov
   - The left and the right subtree of a particular `node` will also, in turn, be binary search trees.
 
 - **Balance of BST**
-- **B-Tree**
+  The structure may differ according to the insertion order of a BST. The nodes in a extremely unbalanced BST may only have right nodes or left nodes. The time complextiy of search operation of balanced and extremely unbalanced tree are `O(log n)` and `O(n)`. Many derived BSTs share similar structures, with differences arising from their distinct balancing strategies.
 
 #### Heap
 
-- **Definition**:
-- **Access**:
-- **Search**:
-- **Insert**:
-- **Delete**:
+- **Definition**: A heap is a complete tree, meaning all levels are fully filled except possibly the last, which is filled from left to right. Additionally, heaps maintain a hierarchical order—which is reffered to as sorting rule— between parent and child nodes, but not between siblings. In a max heap, the root node is the largest, whereas in a min heap, the root node is the smallest. The heap mentioned in this page focused on binary heap.
+- **Access**: Because the position of data in heap is not strictly sorted by insertion or value, accessing a specific index in a heap is meaningless.
+- **Search**: A `extract_root` function used to extract the root (extreme data) has an `O(1)` time complexity. Search for a non-extreme data need a traversl, which is `O(n)` time complexity.
+- **Insert**: To insert a data into a heap must consider the hierarchical rule. The steps of insertion is shown below:
+  1. Insert new data to the end of the heap.
+  2. Compare the new node and its father node. If they violate the rule swap their position.
+  3. Repeat step 2 until the new node and its father node comply with the sorting rule.
+The above operation is called `swim`. Its time complexity is `O(log n)`.
+- **Delete**: Deletion of a node in a heap also needs to comply with sorting rule. The below steps called `sink` has a time complexity of `O(log n)`:
+  1. Swap the target node and the last node. For convenience, we will refer to the last node as node A.
+  2. Delete the target node which is now at the end of the heap.
+  3. Compare node A and its child nodes (2 in a binary heap). If they violate the rule swap the bigger one and node A.
+  4. Repeat step 3 until node A comply with the sorting rule.
 
 #### Graph
 
