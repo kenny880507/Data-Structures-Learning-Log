@@ -170,7 +170,11 @@ The above operation is called `swim`. Its time complexity is `O(log n)`.
 
 ### Graph
 
-- **Definition**:
+![graph](documents/images/Data%20Structure/graph.png)
+
+- **Definition**: A graph consists of nodes and edges. Edges represent for the relationship of nodes. If all edges are bidirectional, it is called undirected graph (left in the above image). Otherwise, it is called directed graph (right in above image). In the right graph, A, C and B form a cycle because you can start at A and finally return to it. Although edges exist between B, C, and E, they do not form a cycle.
+- **Application**: Graphs are a fundamental concept used to model connections between objects. They are applied in numerous real-world scenarios. For example, in social networks like Facebook, graphs connect users and suggest friends. In navigation systems like Google Maps, they represent cities and roads to find the shortest route. Search engines also use graphs to rank web pages based on their links, and in biology, graphs help visualize complex interactions between proteins.
+  >Graphs differ significantly from the aforementioned data structures; their purpose is not to store data, but to represent relationships between data and solve optimization problems. Therefore, we do not discuss its access, search, insert, or delete operations.
 
 ## Cheat Sheet
 
