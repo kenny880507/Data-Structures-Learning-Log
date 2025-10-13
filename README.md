@@ -1,23 +1,22 @@
-# Data Structure Learning Log
+# Data Structures and Algorithms Learning Log
 
-This project is used to document the learning journey of data structures. I will be documenting my notes and coding exercises here.
+This project is used to document the learning journey of data structures and algorithms. I will be documenting my notes and coding exercises here.
 
-
-## Outline
+# Outline
 
 - [Data Structure](#data-structure)
 - [C++](#c++)
 - [Git](#git)
 - [Reference](#reference)
 
-## Data Structure
+# Data Structure
 
 This section will introduce common containers in data structure. The content covers the definition of each container and the four fundamental operations: access, search, insert, and delete.
 > Since `delete` is a reserved keyword in C++, the `delete()` function is usually replaced with alternative names such as `remove()`.
 
-### Introduction to Data Structure
+## Introduction to Data Structure
 
-#### Array
+### Array
 
 ![array](documents/images/Data%20Structure/array.png)
 
@@ -27,7 +26,7 @@ This section will introduce common containers in data structure. The content cov
 - **Insert**: To insert an element, all data after the insertion point must be shifted one position to the right. The time complexity is `O(n)`. For a sorted array, binary search can be used to reduce the time complexity to `O(log n)`.
 - **Delete**: To delete an element, all data after the deleted item must be shifted one position to the left. The time complexity is `O(n)`.
 
-#### Linked List
+### Linked List
 
 ![Linked List](documents/images/Data%20Structure/linked_list.png)
 
@@ -39,7 +38,7 @@ This section will introduce common containers in data structure. The content cov
 - **Delete**: Similar to insertion, **if the position of the node to be deleted is known**, the operation can be completed by adjusting the pointers of its surrounding nodes. First, use a variable `temp` to store the address of `current`. Then set `previous->next` to `current->next`, and finally free the `temp` (i.e., the current node). The time complexity is `O(1)`.
   >Without `temp`, it's not possible to free the memory of `current`.
 
-#### Queue
+### Queue
 
 ![Queue](documents/images/Data%20Structure/queue.png)
 
@@ -56,7 +55,7 @@ This section will introduce common containers in data structure. The content cov
     > A `circular array` is a clever way to utilize `array` space efficiently. It connects the head and tail of the array to form a logical circle, effectively solving the problem of wasted space and performance issues that arise when handling FIFO (First-In-First-Out) data structures like `queues`, especially after removing elements from the front.
   - `Linked list`-based: Similar to `linked list`, `enqueue` and `dequeue` operations performs a constant time complexity of `O(1)`.
 
-#### Stack
+### Stack
 
 ![Stack](documents/images/Data%20Structure/stack.png)
 
@@ -69,7 +68,7 @@ This section will introduce common containers in data structure. The content cov
 - **Insert**: A single `push` action performs a time complexity of `O(1)`.
 - **Delete**: A single `pop` action performs a time complexity of `O(1)`.
 
-#### Hash Table
+### Hash Table
 
 - **Definition**: At the lowest level, the implementation uses an `array`. Data is input as `key`-`value` pairs, where the `key` is typically a string or an integer. A hash function converts the `key` into a `hash value` (a non-negative integer), which is then mapped to an `index` in the underlying array.
   >A good hash function should satisfy the following criteria:
@@ -88,7 +87,7 @@ This section will introduce common containers in data structure. The content cov
   - Average case - The time required to compute the hash function and delete the `value` from a specific position in the `array` is constant, so the time complexity is `O(1)`.
   - Worst case - Under severe collisions, it is necessary to linearly traverse all collided entries to locate and delete the target, causing the time complexity to degrade to `O(n)`.
 
-#### Tree
+### Tree
 
 ![Tree](documents/images/Data%20Structure/tree.png)
 
@@ -153,7 +152,7 @@ This section will introduce common containers in data structure. The content cov
 - **Balance of BST**
   The structure may differ according to the insertion order of a BST. The nodes in a extremely unbalanced BST may only have right nodes or left nodes. The time complextiy of search operation of balanced and extremely unbalanced tree are `O(log n)` and `O(n)`. Many derived BSTs share similar structures, with differences arising from their distinct balancing strategies.
 
-#### Heap
+### Heap
 
 - **Definition**: A heap is a complete tree, meaning all levels are fully filled except possibly the last, which is filled from left to right. Additionally, heaps maintain a hierarchical order—which is reffered to as sorting rule— between parent and child nodes, but not between siblings. In a max heap, the root node is the largest, whereas in a min heap, the root node is the smallest. The heap mentioned in this page focused on binary heap.
 - **Access**: Because the position of data in heap is not strictly sorted by insertion or value, accessing a specific index in a heap is meaningless.
@@ -169,29 +168,25 @@ The above operation is called `swim`. Its time complexity is `O(log n)`.
   3. Compare node A and its child nodes (2 in a binary heap). If they violate the rule swap the bigger one and node A.
   4. Repeat step 3 until node A comply with the sorting rule.
 
-#### Graph
+### Graph
 
 - **Definition**:
-- **Access**:
-- **Search**:
-- **Insert**:
-- **Delete**:
 
-### Cheat Sheet
+## Cheat Sheet
 
-#### Big-O Complexity Chart[^1]
+### Big-O Complexity Chart[^1]
 
 ![Big-O Complexity Chart](documents/images/Data%20Structure/Big-O%20Complexity%20Chart.png)
 
-#### Common Data Structure Operations[^1]
+### Common Data Structure Operations[^1]
 
 ![Big-O Complexity Chart](documents/images/Data%20Structure/Common%20Data%20Structure%20Operations.png)
 
-#### Array Sorting Algorithms[^1]
+### Array Sorting Algorithms[^1]
 
 ![Big-O Complexity Chart](documents/images/Data%20Structure/Array%20Sorting%20Algorithms.png)
 
-## C++
+# C++
 
 This section records the C++ syntax used in my code and demonstrates how to implement different data structures using C++.
 
@@ -210,9 +205,9 @@ The execution strategy is below:
    >- `end()`: return the iterator that point to the address just after the final data.
 2. The `access()` and `search()` functions are implemented as external template functions that operate on iterators.
 
-### Syntax
+## Syntax
 
-#### Class
+### Class
 
 A C++ class acts as a blueprint for an object, defining its attributes (data) and behaviors (functions). It encapsulates both data and the functions that operate on that data into a single, cohesive unit.
 
@@ -233,7 +228,7 @@ public:
 };
 ```
 
-#### function
+### function
 
 A function is a block of code designed to perform a specific task. It can optionally define input parameters to allow the caller to pass arguments and can also return a value as output. In C++, functions can exist independently or as member functions of a class.
 
@@ -252,7 +247,7 @@ public:
 };
 ```
 
-#### Overload
+### Overload
 
 Function overloading allows multiple functions in the same scope to share the same name, as long as they have a different number or type of parameters. The compiler automatically selects the correct function to execute based on the arguments you provide.
 
@@ -272,7 +267,7 @@ void print(int a, int b) {
 }
 ```
 
-#### Template
+### Template
 
 A template is a tool for generic programming that allows functions or classes to work with multiple data types without needing to rewrite the code for each type. This promotes code reusability. A template declaration starts with the keyword `template`, followed by parameters enclosed in angle brackets `< >`.
 
@@ -293,7 +288,7 @@ public:
 };
 ```
 
-#### Iterator
+### Iterator
 
 An iterator is a pointer-like object used to traverse elements within a container, such as an array or a linked list. Different types of iterators support different operations, such as moving forward, backward, or performing random access. Iterators generalize the concept of a pointer, allowing for uniform interaction with various data structures. Types of iterator used in my code is shown in the table below:
 
@@ -306,7 +301,7 @@ An iterator is a pointer-like object used to traverse elements within a containe
 | **Distance Calculation** | Requires $O(N)$ traversal | Requires $O(N)$ traversal | **$O(1)$** (Constant Time) via subtraction (`end - begin`) |
 | **Example Data Structure** | **Linked List** | **Doubly Linked List**, **Tree** | **Array**, **Dynamic Array** |
 
-#### Tag Type
+### Tag Type
 
 Tag type is basically a empty struct. Tag types are used as a mechanism to distinguish between overloaded functions. For example, two tag type is defined:
 
@@ -329,7 +324,7 @@ typename Iterator::value_type do_something(Iterator it, type2_tag){
 ```
 The reason for using this syntax is that different iterators support different operations—not all iterators can move forward, backward, or perform random access.
 
-### Implement of Data Structure
+## Implement of Data Structure
 
 As mentioned above, the implement of data structure is via C++ language. The source code splits into three file:
 
@@ -350,7 +345,7 @@ The following table compares the container classes of different datastructure in
 | **Graph** | **No direct equivalent** | - | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
 | **Hash Table** | `std::unordered_set`, `std::unordered_map` | `hash_table` | Provides average O(1) time complexity for lookups, but the data is not sorted. |
 
-### Big 5 of C++ class
+## Big 5 of C++ class
 
 For each data structure class in C++, there are three construct method and two assignment method—namely "Big Five"–need to be define. In addition, the destructor is important to prevent memory leak. The following table illustrate the implementation of these function:
 
@@ -363,11 +358,11 @@ For each data structure class in C++, there are three construct method and two a
 | **5. Move Constructor** | Move Constructor | `MyClass(MyClass&& other);` | **Transfers** resource ownership (e.g., pointers) from a temporary object, typically setting the source to `nullptr`. |
 | **6. Move Assignment** | Move Assignment Operator | `MyClass& operator=(MyClass&& other);` | Allows an existing object to be move-assigned (resource transfer) from a temporary object. |
 
-### dynamic_array Implementation Summary
+## dynamic_array Implementation Summary
 
 The `dynamic_array` class manages a contiguous block of memory, mimicking the structure and behavior of `std::vector`.
 
-#### Private Members
+### Private Members
 
 These members manage the internal state and resources of the array.
 
@@ -377,7 +372,7 @@ These members manage the internal state and resources of the array.
 | `capacity` | `size_t` | The **total allocated space** (in terms of elements) currently available in the `data` array. |
 | `size` | `size_t` | The **current number of elements** actually stored and initialized in the array. (`size <= capacity`). |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 These functions provide the primary interface for users to interact with the array and control its size.
 
@@ -418,7 +413,7 @@ These functions provide the primary interface for users to interact with the arr
     }
     ```
 
-##### Inner Class: iterator
+#### Inner Class: iterator
 
 The nested `iterator` class implements all operations required for a **Random Access Iterator**.
 
@@ -451,7 +446,7 @@ The nested `iterator` class implements all operations required for a **Random Ac
     }
     ```
 
-#### Capacity Management
+### Capacity Management
 
 * **`void expand()`**
     * **Purpose:** Increases the memory allocation of the array when it is full (`size == capacity`).
@@ -473,11 +468,11 @@ The nested `iterator` class implements all operations required for a **Random Ac
     }
     ```
 
-### linked_list Implementation Summary
+## linked_list Implementation Summary
 
 The `linked_list` is implemented as a singly linked list, utilizing nodes and pointers for efficient element manipulation.
 
-#### Private Members
+### Private Members
 
 These members manage the internal state and structure of the list.
 
@@ -486,7 +481,7 @@ These members manage the internal state and structure of the list.
 | `head` | `node*` | Pointer to the **first node** (the head) of the list. It is `nullptr` if the list is empty. |
 | `size` | `size_t` | The **current number of elements** (nodes) in the list. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 These functions provide the primary interface for users to interact with the list.
 
@@ -554,7 +549,7 @@ These functions provide the primary interface for users to interact with the lis
     }
     ```
 
-##### Inner Class: iterator
+#### Inner Class: iterator
 
 The nested `iterator` class implements the **Forward Iterator** interface.
 
@@ -566,18 +561,18 @@ The nested `iterator` class implements the **Forward Iterator** interface.
 * **Core Operators:** Implements `operator*()`, `operator->()`, and comparison operators (`==`, `!=`).
 * **Traversal Support:** Implements the pre-fix (`operator++()`) and post-fix (`operator++(int)`) increment operators, which move the internal pointer (`ptr`) to the next node (`ptr->next`).
 
-##### Inner Class: node
+#### Inner Class: node
 
 The nested `node` class defines the element structure of the list.
 
 * **Members:** Contains the element data (`T data`) and a pointer to the next node (`node* next = nullptr`).
 * **Friendship:** Declares `iterator` and `linked_list` as `friend` classes to allow them to directly access and modify the private `data` and `next` pointer of the node.
 
-### deque (Double-Ended Queue) Implementation Summary
+## deque (Double-Ended Queue) Implementation Summary
 
 The `deque` is implemented using a **circular array** to achieve constant time complexity for operations at both ends.
 
-#### Private Members
+### Private Members
 
 These members manage the internal state and circular array logic.
 
@@ -588,7 +583,7 @@ These members manage the internal state and circular array logic.
 | `size_` | `size_t` | The **current number of elements** stored in the deque. |
 | `front_` | `size_t` | The **physical index** in the array where the first element is located. This index wraps around. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 These functions provide the primary interface for users, focusing on efficient endpoint access.
 
@@ -682,7 +677,7 @@ These functions provide the primary interface for users, focusing on efficient e
     }
     ```
 
-##### Inner Class: iterator
+#### Inner Class: iterator
 
 The nested `iterator` class implements the **Random Access Iterator**.
 
@@ -696,17 +691,17 @@ The nested `iterator` class implements the **Random Access Iterator**.
 
 ---
 
-### `stack` Implementation Summary
+## `stack` Implementation Summary
 
 The `stack` class implements the LIFO (Last-In-First-Out) principle by using the `deque` container as an **adapter**.
 
-#### Private Members
+### Private Members
 
 | Member | Type | Purpose |
 | :--- | :--- | :--- |
 | `deque_` | `deque<T>` | The underlying container used to store the stack elements. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 All core stack operations are delegated to the `deque`'s $O(1)$ endpoint methods.
 
@@ -724,17 +719,17 @@ All core stack operations are delegated to the `deque`'s $O(1)$ endpoint methods
 
 ---
 
-### `queue` Implementation Summary
+## `queue` Implementation Summary
 
 The `queue` class implements the FIFO (First-In-First-Out) principle by using the `deque` container as an **adapter**.
 
-#### Private Members
+### Private Members
 
 | Member | Type | Purpose |
 | :--- | :--- | :--- |
 | `deque_` | `deque<T>` | The underlying container used to store the queue elements. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 All core queue operations are delegated to the `deque`'s $O(1)$ endpoint methods.
 
@@ -752,11 +747,11 @@ All core queue operations are delegated to the `deque`'s $O(1)$ endpoint methods
 
 ---
 
-### `BST` (Binary Search Tree) Implementation Summary
+## `BST` (Binary Search Tree) Implementation Summary
 
 The `BST` implements a fundamental binary search tree structure with distinct iterators for Depth-First Search (DFS) traversals.
 
-#### Private Members
+### Private Members
 
 | Member | Type | Purpose |
 | :--- | :--- | :--- |
@@ -764,7 +759,7 @@ The `BST` implements a fundamental binary search tree structure with distinct it
 | `delete_subtree` | `void` helper | Recursively cleans up memory for all nodes in a subtree. Essential for the destructor and copy assignment. |
 | `clone_subtree` | `node*` helper | Recursively performs deep copying of an entire subtree. Essential for the copy constructor and copy assignment. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 * **`void insert(const T& data)` (Override)**
     * **Purpose:** Inserts a new value while maintaining the BST property (left < parent < right).
@@ -775,13 +770,13 @@ The `BST` implements a fundamental binary search tree structure with distinct it
 * **`bool search(const T& data)` (Override)**
     * **Purpose:** Finds a value by traversing the tree based on comparison. Performance is **$O(\log N)$** or **$O(N)$**.
 
-##### Inner Class: `node`
+#### Inner Class: `node`
 
 The nested `node` class defines the element structure of the BST.
 
 * **Members:** Contains the element value (`T value`) and pointers to the left and right children (`node* left`, `node* right`).
 
-##### Traversal Iterators (`pre_iterator`, `in_iterator`, `post_iterator`)
+#### Traversal Iterators (`pre_iterator`, `in_iterator`, `post_iterator`)
 
 Three separate classes are defined, all implementing the **Forward Iterator** interface, using an internal `stack<node*>` to manage non-recursive traversal state.
 
@@ -792,18 +787,18 @@ Three separate classes are defined, all implementing the **Forward Iterator** in
 
 ---
 
-### `heap` (Binary Heap) Implementation Summary
+## `heap` (Binary Heap) Implementation Summary
 
 The `heap` implements a complete binary tree structure (Max-Heap or Min-Heap) using a `dynamic_array` as its base.
 
-#### Private Members
+### Private Members
 
 | Member | Type | Purpose |
 | :--- | :--- | :--- |
 | `is_max_heap` | `bool` | Flag that determines the heap type (`true` for Max-Heap, `false` for Min-Heap). |
 | `array_` | `dynamic_array<T>` | The underlying container that stores the heap elements in contiguous memory. |
 
-#### Public Members (Non-Big Six Functions)
+### Public Members (Non-Big Six Functions)
 
 * **`void insert(const T& input)`**
     * **Purpose:** Adds a new element to the heap. Performance is **$O(\log N)$**.
@@ -832,7 +827,7 @@ The `heap` implements a complete binary tree structure (Max-Heap or Min-Heap) us
 * **`size_t father(size_t child_idx)` / `size_t left_child(...)` / `size_t right_child(...)`**
     * **Purpose:** Utility functions to calculate the index of parent or child nodes based on the array's $2i+1$ heap convention.
 
-#### Capacity Management
+### Capacity Management
 
 * **`void swim(size_t idx)`**
     * **Purpose:** Restores the heap property by moving an element *up* the tree towards the root. Used after insertion.
@@ -842,11 +837,11 @@ The `heap` implements a complete binary tree structure (Max-Heap or Min-Heap) us
     * **Purpose:** Restores the heap property by moving an element *down* the tree towards the leaves. Used after `extract_root`.
     * **Logic:** Compares the element at `idx` with its largest (or smallest) child; if they violate the rule, it is swapped with the child, and the process repeats. This moves the element at most $\log N$ levels.
 
-## Git
+# Git
 
 This section will include some notes about usage of Git and GitHub.
 
-### Initialize Local Repository.
+## Initialize Local Repository.
 
 **1. Make a new directory named `<project-name>` and change directory**
 
@@ -880,7 +875,7 @@ git add <file-name>   #stage specific file
 git commit -m "<any-comment>"   #commit the already staged changes with a comment.
 ```
 
-### Make connection between computer and GitHub
+## Make connection between computer and GitHub
 
 **1. Check if an SSH key already exists on the computer**
 
@@ -934,7 +929,7 @@ ssh -T git@github.com
 - If you previously set a passphrase for your key, you’ll be prompted to enter it now.
 - If you see a message like `“Hi <your-username>! You've successfully authenticated...”`, it means your SSH key has been set up successfully!
 
-### Make connection between local repo and GitHub repo
+## Make connection between local repo and GitHub repo
 
 **1. Create a new empty repository on GitHub**
 
@@ -962,7 +957,7 @@ Use `git push` command to upload local contents to GitHub repo.
 git push -u origin main
 ```
 
-### Common Git Commands
+## Common Git Commands
 
 ~~`git pull`: download the newest changes to local repo and merge to loacal branch. Equivalent to `git fetch` + `git merge`.~~
 >Barely using `git pull` is not recommended. Use `git pull --rebase` or `git fetch` + `git rebase` instead.
@@ -982,7 +977,7 @@ git push -u origin main
 >- Git uses origin as a default alias pointing to the remote repo.
 >- If the branch already exists on the remote, a simple `git push` is enough.
 
-## Reference
+# Reference
 
 1. <https://www.bigocheatsheet.com/>
 2. <https://zerotomastery.io/cheatsheets/data-structures-and-algorithms-cheat-sheet/>
