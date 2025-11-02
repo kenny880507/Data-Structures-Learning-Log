@@ -343,7 +343,7 @@ The following table compares the container classes of different datastructure in
 | **Array** | `std::array`, `std::vector` | `dynamic_array` | `std::array` has a fixed size at compile time, while `std::vector` can be resized dynamically. |
 | **Linked List** | `std::list`, `std::forward_list` | `linked_list` | `std::list` is a doubly linked list, `std::forward_list` is a singly linked list. |
 | **Tree** | `std::set`, `std::map`, `std::multiset`, `std::multimap` | - | These are typically implemented using **balanced binary search trees** (e.g., Red-Black Trees) to keep data sorted. |
-| **Heap** | `std::priority_queue` | - | The underlying data structure is a heap (by default, a max-heap), providing efficient access to the largest element. |
+| **Heap** | `std::priority_queue` | `heap` | The underlying data structure is a heap (by default, a max-heap), providing efficient access to the largest element. |
 | **Queue** | `std::queue` | `queue` | A First-In, First-Out (FIFO) container. |
 | **Stack** | `std::stack` | `stack` | A Last-In, First-Out (LIFO) container. |
 | **Graph** | **No direct equivalent** | - | Often simulated using an **adjacency matrix** (`std::vector<std::vector<int>>`) or an **adjacency list** (`std::vector<std::list<int>>`). |
